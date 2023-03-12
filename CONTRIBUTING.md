@@ -22,11 +22,21 @@ branche sur laquelle faire les changements.
 git pull origin main
 ```
 
+## Pousser le contenu de sa branche à GitHub
+Récupérez le code le plus récent. `main` doit être remplacé par le nom de la
+branche sur laquelle faire les changements.
+**Attention**: ne faites pousser les changements sur la branche `main` que si
+le code fonctionne et ne casse pas d'autres parties du code. Vous pouvez créer
+une autre branche si le code de fonctionne pas (voir [ici](#les-branches)).
+```bash
+git push origin main
+```
+
 ## Commit des changements localement
 **Attention**: ne faites un commit sur la branche `main` que si le code
 fonctionne et ne casse pas d'autres parties du code. Vous pouvez créer une
-autre branche si le code de fonctionne pas (void [ici](#les-branches)).
-Récupérez le code le plus récent (instructions
+autre branche si le code de fonctionne pas (voir [ici](#les-branches)).
+Récupérez le code le plus récent (voir
 [ici](#récupérez-le-code-le-plus-récent-de-github)) puis utilisez les commandes
 suivantes:
 (Remplacez `.` par un nom de dossier ou de fichier si vous ne voulez pas tout
