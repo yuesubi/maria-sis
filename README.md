@@ -23,3 +23,12 @@ git clone https://github.com/yuesubi/maria-bros.git
 cd maria-bros
 python maria.py
 ```
+
+
+## Schémas
+
+### Modules
+![Schéma des modules](/res/schemas/modules.svg)
+
+### Classes
+![Schéma des classes](/res/schemas/classes.svg)
