@@ -21,7 +21,7 @@ git clone https://github.com/yuesubi/maria-bros.git
 ### Exécution
 ```bash
 cd maria-bros
-python maria.py
+python maria-bros.py
 ```
 
 
