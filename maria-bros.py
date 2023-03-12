@@ -1,6 +1,6 @@
 """Jeu Maria Bros."""
 
-from .src import Jeu
+from src import Jeu
 
 
 # Point d'entrée du programme
