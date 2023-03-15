@@ -1,5 +1,5 @@
-# Maria Bros
-Clone de Mario Bros en python avec pygame
+# Maria Sis
+Mario Bros mais en plus féministe.
 
 
 ## Contribuer
@@ -12,16 +12,16 @@ Voir [CONTRIBUTING.md](/CONTRIBUTING.md)
 Pour exécuter le jeu il faut avoir `pygame` version 2 d'installé.
 
 ### Cloner le repo
-Téléchargez le [zip](https://github.com/yuesubi/maria-bros/archive/refs/heads/main.zip)
+Téléchargez le [zip](https://github.com/yuesubi/maria-sis/archive/refs/heads/main.zip)
 ou clonez le repo avec:
 ```bash
-git clone https://github.com/yuesubi/maria-bros.git
+git clone https://github.com/yuesubi/maria-sis.git
 ```
 
 ### Exécution
 ```bash
-cd maria-bros
-python maria-bros.py
+cd maria-sis
+python maria-sis.py
 ```
 
 

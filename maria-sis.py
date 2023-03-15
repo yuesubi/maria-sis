@@ -1,4 +1,4 @@
-"""Jeu Maria Bros."""
+"""Jeu Maria Sis."""
 
 from src import Jeu
 
