@@ -1,3 +1,5 @@
 # Tout les fichiers/dossiers que git ne doit pas traquer
 
 **/__pycache__/
+
+/cahier_charges.odt
