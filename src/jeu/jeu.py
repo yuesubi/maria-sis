@@ -1,8 +1,8 @@
-"""Jeu Maria Bros"""
+"""Jeu Maria Sis"""
 
 
 class Jeu:
-    """Jeu Maria Bros"""
+    """Jeu Maria Sis"""
 
     def __init__(self) -> None:
         raise NotImplementedError("Le jeu n'est pas jouable pour l'instant")
