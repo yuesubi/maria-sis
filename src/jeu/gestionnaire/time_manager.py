@@ -40,6 +40,10 @@ class Time:
         """
         return pygame.time.get_ticks() * 1e-3
     
+    @ClassGetter
+    def fps(cls) -> float:
+        return cls._clock.get_fps()
+    
     ############################################################################
     # MÉTHODES D'ACTUALISATION DU TEMPS
 
