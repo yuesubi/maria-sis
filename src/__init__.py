@@ -1,3 +1,3 @@
 """Le code source du projet."""
 
-from .jeu import Jeu
+from .jeu import Game

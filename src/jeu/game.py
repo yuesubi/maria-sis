@@ -2,13 +2,13 @@
 
 import pygame
 
-from .gestionnaire import Input, Time
+from .managers import Input, Time
 
 
 WIDTH, HEIGHT = 16, 13
 
 
-class Jeu:
+class Game:
     """Jeu Maria Sis"""
 
     def __init__(self) -> None:
