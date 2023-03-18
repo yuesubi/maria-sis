@@ -33,7 +33,7 @@ class Time:
         return cls._fixed_delta_time
 
     @ClassGetter
-    def current_time(cls) -> float:
+    def time(cls) -> float:
         """
         Assesseur du temps.
         :return: Le temps.
