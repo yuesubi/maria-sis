@@ -1,5 +1,7 @@
 import pygame
 
+from ...utils import ClassGetter
+
 
 class Time:
     """Classe statique qui gère les temps et les durées du jeu."""
@@ -14,8 +16,7 @@ class Time:
     ############################################################################
     # ASSESSEURS
 
-    @property
-    @classmethod
+    @ClassGetter
     def delta_time(cls) -> float:
         """
         Assesseur du temps écoulé entre les deux actualisations.
@@ -23,8 +24,7 @@ class Time:
         """
         return cls._clock.get_time()
     
-    @property
-    @classmethod
+    @ClassGetter
     def fixed_delta_time(cls) -> float:
         """
         Assesseur du temps entre deux actualisations du mouvement.
@@ -32,8 +32,7 @@ class Time:
         """
         return cls._fixed_delta_time
 
-    @property
-    @classmethod
+    @ClassGetter
     def current_time(cls) -> float:
         """
         Assesseur du temps.

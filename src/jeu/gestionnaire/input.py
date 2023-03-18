@@ -1,5 +1,7 @@
 import pygame
 
+from ...utils import ClassGetter
+
 
 class Input:
     """Classe statique qui gère les entrées du jeu."""
@@ -26,9 +28,8 @@ class Input:
 
     ############################################################################
     # ASSESSEURS
-    
-    @property
-    @classmethod
+
+    @ClassGetter
     def is_quitting(cls) -> bool:
         """
         Assesseur pour savoir si l'application doit être quittée.
@@ -36,8 +37,7 @@ class Input:
         """
         return cls._is_quitting
 
-    @property
-    @classmethod
+    @ClassGetter
     def mouse_position(cls) -> pygame.Vector2:
         """
         Assesseur pour récupérer la position de la souris.
@@ -45,8 +45,7 @@ class Input:
         """
         return cls._mouse_position
 
-    @property
-    @classmethod
+    @ClassGetter
     def delta_mouse_position(cls) -> pygame.Vector2:
         """
         Assesseur pour récupérer la difference de position de la souris avec le
