@@ -1,0 +1,1 @@
+"""Module des blocks du jeu."""

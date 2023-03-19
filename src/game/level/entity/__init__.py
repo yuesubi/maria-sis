@@ -1,0 +1,1 @@
+"""Module contenant toutes les entités."""
