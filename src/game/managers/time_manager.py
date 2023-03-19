@@ -76,6 +76,6 @@ class Time:
     def update(cls) -> None:
         """Actualiser les variables de temps."""
 
-        cls._new_time = time.time_ns()
-        cls._delta_time = (cls._new_time - cls._time) * 1E-9
-        cls._time = cls._new_time
+        _new_time = time.time_ns()
+        cls._delta_time = (_new_time - cls._time) * 1E-9
+        cls._time = _new_time
