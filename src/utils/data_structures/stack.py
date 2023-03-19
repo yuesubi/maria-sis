@@ -35,7 +35,20 @@ class Stack(typing.Generic[T]):
     
     def pop(self) -> T:
         """
-        Dépiler une valeur. [!] Lance IndexError si la pile est vide.
+        Dépiler la valeur en haut de la pile. [!] Lance IndexError si la pile
+        est vide.
         :return: La valeur dépilée.
         """
+        if self.is_empty:
+            raise IndexError("can't pop a value from an empty stack")
         return self._internal_list.pop()
+    
+    def peak(self) -> T:
+        """
+        Consulter la valeur en haut de la pile. [!] Lance IndexError si la pile
+        est vide.
+        :return: La valeur en haut de la pile.
+        """
+        if self.is_empty:
+            raise IndexError("can't peak on an empty stack")
+        return self._internal_list[-1]
