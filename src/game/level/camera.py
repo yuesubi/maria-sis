@@ -44,3 +44,23 @@ class Camera:
             self._target_middle + center - self.position, radius,
             width
         )
+    
+    def draw_rect(self, color: pygame.Color, position: pygame.Vector2,
+            size: pygame.Vector2, width: int = 0) -> None:
+        """
+        Dessiner un rectangle.
+        :param color: La couleur du rectangle.
+        :param position: La position du centre du rectangle.
+        :param size: Les dimensions du rectangle.
+        :param width: (optionnel) L'épaisseur du rectangle, si elle est de 0
+            tout le rectangle est plein.
+        """
+        
+        pygame.draw.rect(
+            self._target_surf, color,
+            pygame.Rect(
+                self._target_middle + position - self.position - size/2.0,
+                size
+            ),
+            width
+        )
