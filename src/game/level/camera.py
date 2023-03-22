@@ -1,5 +1,4 @@
 import pygame
-from pygame._common import ColorValue
 
 
 class Camera:
@@ -13,25 +12,35 @@ class Camera:
         self._target_surf: pygame.Surface = pygame.Surface((0, 0))
         self._target_middle: pygame.Vector2 = pygame.Vector2()
     
-    def begin_drawing(self, target_surf: pygame.Surface) -> None:
+    def begin_render(self, target_surf: pygame.Surface) -> None:
         """
-        Commencer à dessiner.
-        :param target_surf: La surface sur laquelle dessiner.
+        Commencer le rendu.
+        :param target_surf: La surface sur laquelle faire le rendu.
         """
         self._target_surf = target_surf
         self._target_middle = pygame.Vector2(target_surf.get_size()) / 2.0
     
-    def end_drawing(self) -> None:
-        """ """
+    def end_render(self):
+        """Terminer le rendu."""
+
+        # Rien à faire, la méthode existe juste au cas où on en aurait besoin.
     
     ############################################################################
-    # MéTHODES DE DESSIN
+    # MÉTHODES DE DESSIN
 
-    def draw_circle(self, color: ColorValue, center: pygame.Vector2,
-            radius: float, width: float) -> None:
+    def draw_circle(self, color: pygame.Color, center: pygame.Vector2,
+            radius: float, width: int = 0) -> None:
+        """
+        Dessiner un cercle.
+        :param color: La couleur du cercle.
+        :param center: La position du centre du cercle.
+        :param radius: Le rayon du cercle.
+        :param width: (optionnel) L'épaisseur du cercle, si elle est de 0 tout
+            le cercle est plein.
+        """
         
         pygame.draw.circle(
             self._target_surf, color,
             self._target_middle + center - self.position, radius,
-            int(round(width))
+            width
         )
