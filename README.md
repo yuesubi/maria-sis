@@ -55,5 +55,7 @@ python maria-sis.py
     scène.
 * 2023/03/19 0h15 Intégration du gestionnaire de scène et d'une scène de niveau
     dans la boucle principale.
-* 2023/03/19 1h10 Création de la classe abstraite Entity, création d'un exemple
+* 2023/03/22 1h10 Création de la classe abstraite Entity, création d'un exemple
     de joueur et intégration dans le niveau.
+* 2023/03/22 0h30 Ajout d'un block décoratif d'exemple et création de la classe
+    abstraite Block.
