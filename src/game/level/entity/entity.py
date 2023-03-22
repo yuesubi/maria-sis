@@ -1,3 +1,5 @@
+import pygame
+
 from abc import ABC, abstractmethod
 
 from ..camera import Camera
@@ -8,6 +10,14 @@ class Entity(ABC):
     Classe abstraite pour une entité. Toutes les entités doivent hériter de
     cette classe et implémenter les méthode abstraites.
     """
+
+    def __init__(self, position: pygame.Vector2) -> None:
+        """
+        Constructeur.
+        :param position: La position de l'entité.
+        """
+        super().__init__()
+        self.position: pygame.Vector2 = position
 
     @abstractmethod
     def update(self) -> None:
