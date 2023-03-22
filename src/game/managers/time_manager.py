@@ -9,7 +9,7 @@ class Time:
     ############################################################################
     # VARIABLES DE LA CLASSE
 
-    _time: int = time.time_ns()
+    _time: int = time.perf_counter_ns()
 
     _fps: float = 1.0
     _delta_time: float = 1.0
@@ -87,6 +87,6 @@ class Time:
     def update(cls) -> None:
         """Actualiser les variables de temps."""
 
-        _new_time = time.time_ns()
+        _new_time = time.perf_counter_ns()
         cls._delta_time = (_new_time - cls._time) * 1E-9
         cls._time = _new_time

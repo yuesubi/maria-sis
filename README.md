@@ -50,6 +50,8 @@ python maria-sis.py
     celle-ci.
 * 2023/03/19 1h00 Ajout de méthodes à Time et création d'un gestionnaire de
     scène.
+* 2023/03/19 0h15 Intégration du gestionnaire de scène et d'une scène de niveau
+    dans la boucle principale.
 
 ### Orgoutte8Pitoulechat
 * date durée tâche
