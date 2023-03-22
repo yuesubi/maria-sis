@@ -36,6 +36,9 @@ python maria-sis.py
 
 ## Progression
 
+### Orgoutte8Pitoulechat
+* date durée tâche
+
 ### Yuesubi
 * 2023/03/11 2h00 Créations de diagrammes UML pour les classes et les modules.
 * 2023/03/12 0h30 Création du README.md avec les instructions de lancement,
@@ -52,6 +55,3 @@ python maria-sis.py
     scène.
 * 2023/03/19 0h15 Intégration du gestionnaire de scène et d'une scène de niveau
     dans la boucle principale.
-
-### Orgoutte8Pitoulechat
-* date durée tâche
