@@ -63,11 +63,22 @@ class Time:
     ############################################################################
     # MÉTHODES STATIQUES CLASSIQUES
 
+    @classmethod
     def set_fixed_fps(cls, fixed_fps: float) -> None:
+        """
+        Changer le nombre de actualisations fixes par seconde.
+        :param fixed_fps: Le nouveau nombre de actualisations fixes par seconde.
+        """
         cls._fixed_fps = fixed_fps
         cls._fixed_delta_time = 1 / fixed_fps if fixed_fps != 0 else 0.0
     
+    @classmethod
     def set_fixed_delta_time(cls, fixed_delta_time: float) -> None:
+        """
+        Changer l'intervale de temps entre les actualisations fixes.
+        :param fixed_delta_time: Le nouvel l'intervale de temps entre les
+            actualisations fixes.
+        """
         cls._fixed_delta_time = fixed_delta_time
         cls._fixed_fps = (1 / fixed_delta_time if fixed_delta_time != 0.0
             else 0.0)
