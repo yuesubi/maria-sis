@@ -2,7 +2,10 @@
 
 import pygame
 
-from .managers import Input, Time
+from typing import Any
+
+from .level import LevelScene
+from .managers import Input, Scene, SceneId, Time
 
 
 WIDTH, HEIGHT = 16, 13
@@ -12,16 +15,43 @@ class Game:
     """Jeu Maria Sis"""
 
     def __init__(self) -> None:
+        """Constructeur."""
         pygame.init()
+        pygame.font.init()
         
         self.window = pygame.display.set_mode((WIDTH * 16 * 2, HEIGHT * 16 * 2))
         pygame.display.set_caption("Maria Sis")
+    
+        Scene.set_create_scene_callback(self.create_scene)
+        Scene.push_scene(SceneId.LEVEL)
+        
+        Time.set_fixed_fps(40)
+    
+    def create_scene(self, scene_id: SceneId, *scene_args: Any,
+            **scene_kwargs: Any) -> Scene:
+        """
+        Méthode appelée pour créer une scène.
+        :param new_scene_id: L'identifiant de la scène à créer.
+        :param *scene_args: Les argument à donner au constructeur de la scène.
+        :param *scene_kwargs: Les argument clés à donner au constructeur de la
+            scène.
+        """
+        new_scene = None
+
+        if scene_id == SceneId.LEVEL:
+            new_scene = LevelScene(*scene_args, **scene_kwargs)
+        else:
+            raise BaseException(f"scene id {scene_id} is not valid")
+        
+        return new_scene
 
     def run(self) -> None:
-        surf = pygame.Surface((16*16, 13*16))
+        """Faire tourner le jeu."""
 
-        pygame.font.init()
+        surf = pygame.Surface((16*16, 13*16))
         font = pygame.font.SysFont("", 16)
+        
+        time_bank: float = 0.0
 
         running = True
         
@@ -30,10 +60,19 @@ class Game:
             if Input.is_quitting == True:
                 running = False
             
+            Scene.current_scene.update()
+            
+            time_bank = min(0.2, time_bank + Time.delta_time)
+            while time_bank > Time.fixed_delta_time:
+                Scene.current_scene.fixed_update()
+                time_bank -= Time.fixed_delta_time
+            
             surf.fill((0, 0, 0))
+            Scene.current_scene.render_to(surf)
 
             pygame.draw.circle(surf, (255, 0, 0), (8*16, 6.5*16), 64)
             surf.blit(font.render(str(round(Time.fps)), False, (0, 255, 0)), (8, 8))
+            surf.blit(font.render(str(round(Time.fixed_fps)), False, (0, 255, 0)), (8, 24))
             
             self.window.blit(pygame.transform.scale(surf, self.window.get_size()), (0, 0))
             pygame.display.flip()

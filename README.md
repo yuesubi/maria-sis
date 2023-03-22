@@ -48,6 +48,8 @@ python maria-sis.py
 * 2023/03/19 0h15 création de la boucle principale.
 * 2023/03/19 0h30 Ajout de la structure de données pile et de tests pour
     celle-ci.
+* 2023/03/19 1h00 Ajout de méthodes à Time et création d'un gestionnaire de
+    scène.
 
 ### Orgoutte8Pitoulechat
 * date durée tâche
