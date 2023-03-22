@@ -70,7 +70,6 @@ class Game:
             surf.fill((0, 0, 0))
             Scene.current_scene.render_to(surf)
 
-            pygame.draw.circle(surf, (255, 0, 0), (8*16, 6.5*16), 64)
             surf.blit(font.render(str(round(Time.fps)), False, (0, 255, 0)), (8, 8))
             surf.blit(font.render(str(round(Time.fixed_fps)), False, (0, 255, 0)), (8, 24))
             

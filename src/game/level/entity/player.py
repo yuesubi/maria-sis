@@ -10,8 +10,11 @@ from .entity import Entity
 
 
 class Player(Entity):
+    """Exemple d'une implémentation du Joueur."""
+
     def __init__(self) -> None:
         super().__init__()
+        """Constructeur."""
 
         # Initialiser les vecteurs
         # La position est un vecteur mais en gros c'est un point, il y a juste
