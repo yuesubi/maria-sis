@@ -29,7 +29,20 @@ class Camera:
     
     ############################################################################
     # MÉTHODES DE DESSIN
-
+    
+    def draw_surface(self, center: pygame.Vector2, surface: pygame.Surface
+            ) -> None:
+        """
+        Dessiner une surface.
+        :param center: La position du centre du cercle.
+        :param surface: La surface à dessiner.
+        """
+        self._target_surf.blit(
+            surface,
+            self._target_middle + UNIT*(center - self.position) - \
+                pygame.Vector2(surface.get_size()) / 2.0
+        )
+    
     def draw_circle(self, color: pygame.Color, center: pygame.Vector2,
             radius: float, width: int = 0) -> None:
         """
@@ -40,7 +53,6 @@ class Camera:
         :param width: (optionnel) L'épaisseur du cercle, si elle est de 0 tout
             le cercle est plein.
         """
-        
         pygame.draw.circle(
             self._target_surf, color,
             self._target_middle + UNIT*(center - self.position), radius,
@@ -57,7 +69,6 @@ class Camera:
         :param width: (optionnel) L'épaisseur du rectangle, si elle est de 0
             tout le rectangle est plein.
         """
-        
         pygame.draw.rect(
             self._target_surf, color,
             pygame.Rect(
