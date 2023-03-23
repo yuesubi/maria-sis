@@ -1,9 +1,10 @@
+import os
 import pygame
 
 from ..managers import Time, Scene
 from .camera import Camera
-from .block import Block, DecorativeBlock
 from .entity import Player
+from .level_map import LevelMap
 
 
 class LevelScene(Scene):
@@ -15,9 +16,9 @@ class LevelScene(Scene):
         self.player: Player = Player()
         self.camera: Camera = Camera()
 
-        self.blocks: list[Block] = [
-            DecorativeBlock(pygame.Vector2(0, 1))
-        ]
+        map_path = os.path.join(os.path.dirname(__file__), "..", "..", "..",
+            "maps", "sample.png")
+        self.level_map = LevelMap.create_from_file(map_path)
     
     def fixed_update(self) -> None:
         self.player.fixed_update()
@@ -29,7 +30,7 @@ class LevelScene(Scene):
     
     def render_to(self, target_surf: pygame.Surface) -> None:
         self.camera.begin_render(target_surf)
-        for block in self.blocks:
+        for block in self.level_map.near_blocks(self.camera.position):
             block.draw(self.camera)
         self.player.draw(self.camera)
         self.camera.end_render()

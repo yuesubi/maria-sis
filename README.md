@@ -59,5 +59,7 @@ python maria-sis.py
     de joueur et intégration dans le niveau.
 * 2023/03/22 0h30 Ajout d'un block décoratif d'exemple et création de la classe
     abstraite Block.
-* 2023/03/22 1h15 Création de la LevelMap et de Chunk pour stocker les blocks et
+* 2023/03/23 1h15 Création de la LevelMap et de Chunk pour stocker les blocks et
     les entités du niveau.
+* 2023/03/23 0h45 Implémentation de la méthode pour charger une carte depuis une
+    image.

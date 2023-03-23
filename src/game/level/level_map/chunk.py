@@ -1,4 +1,3 @@
-from functools import filter
 from typing import Iterator
 
 from ....constants import *
