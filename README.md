@@ -42,8 +42,7 @@ python maria-sis.py
 ### Yuesubi
 * 2023/03/11 2h00 Créations de diagrammes UML pour les classes et les modules.
 * 2023/03/12 0h30 Création du README.md avec les instructions de lancement,
-                ajout de la LICENCE et de CONTRIBUTING.md avec les commandes de
-                base de git.
+    ajout de la LICENCE et de CONTRIBUTING.md avec les commandes de base de git.
 * 2023/03/12 0h15 Création de l'arborescence de base du projet.
 * 2023/03/15 0h30 Ajout d'un gestionnaire de temps et d'entrées.
 * 2023/03/18 0h30 Ajout de décorateurs utilitaires.
@@ -59,3 +58,5 @@ python maria-sis.py
     de joueur et intégration dans le niveau.
 * 2023/03/22 0h30 Ajout d'un block décoratif d'exemple et création de la classe
     abstraite Block.
+* 2023/03/22 1h15 Création de la LevelMap et de Chunk pour stocker les blocks et
+    les entités du niveau.
