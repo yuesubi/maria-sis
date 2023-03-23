@@ -21,6 +21,13 @@ class Player(Entity):
             position=pygame.Vector2(0, 0)
         )
         self.velocity: pygame.Vector2 = pygame.Vector2()
+
+        # Masque pour les collisions
+        surf = pygame.Surface((16, 16))
+        surf.fill((0, 0, 0))
+        pygame.draw.circle(surf, (255, 255, 255), (8, 8), 8, 2)
+        surf.set_colorkey((0, 0, 0))
+        self._collision_mask: pygame.mask.Mask = pygame.mask.from_surface(surf)
     
     def fixed_update(self) -> None:
         # Ajouter la vélocité à la position en la multipliant par le temps
@@ -55,3 +62,11 @@ class Player(Entity):
             self.position, radius=UNIT / 2,
             width=2
         )
+    
+    @property
+    def collision_mask(self) -> pygame.mask.Mask:
+        """
+        Assesseur du masque pour les collisions.
+        :return: Le masque pour les collisions.
+        """
+        return self._collision_mask

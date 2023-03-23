@@ -13,18 +13,19 @@ class DecorativeBlock(Block):
     """Classe d'un exemple de block décoratif."""
 
     def __init__(self, position: pygame.Vector2) -> None:
-        super().__init__()
         """
         Constructeur.
-        :param position: La position du block
+        :param position: La position du block.
         """
+        super().__init__(
+            position
+        )
 
         # TODO: Prendre en argument l'image du block et la stocker pour pouvoir
         # la dessiner
 
-        # La position est un vecteur mais en gros c'est un point, il y a juste
-        # pas de classe Point dans pygame.
-        self.position: pygame.Vector2 = position
+        # Remplir le masque de collision
+        self.collision_mask.fill()
     
     def draw(self, camera: Camera) -> None:
 

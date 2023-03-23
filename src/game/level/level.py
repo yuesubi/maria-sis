@@ -1,6 +1,7 @@
 import os
 import pygame
 
+from ...constants import UNIT
 from ..managers import Time, Scene
 from .camera import Camera
 from .entity import Player
@@ -31,6 +32,15 @@ class LevelScene(Scene):
             self.player.position + CAMERA_OFFSET,
             Time.fixed_delta_time * 4
         )
+
+        for block in self.level_map.near_blocks(self.camera.position):
+            is_colliding = self.player.collision_mask.overlap(
+                block.collision_mask,
+                (self.player.position - block.position)*UNIT
+            )
+            if is_colliding:
+                pass
+                # print((self.player.position - block.position).x)
 
     def update(self) -> None:
         self.player.update()

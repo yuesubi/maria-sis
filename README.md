@@ -64,3 +64,4 @@ python maria-sis.py
 * 2023/03/23 0h45 Implémentation de la méthode pour charger une carte depuis une
     image.
 * 2023/03/23 0h10 Ajout d'un point d'apparition sur la carte.
+* 2023/03/23 0h30 Ajout de la détection de collision.
