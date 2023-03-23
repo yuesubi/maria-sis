@@ -9,7 +9,8 @@ Voir [CONTRIBUTING.md](/CONTRIBUTING.md)
 ## Lancement
 
 ### Dépendances
-Pour exécuter le jeu il faut avoir `pygame` version 2 d'installé.
+Pour exécuter le jeu il faut avoir `python` (**une version assez récente**) et
+`pygame` **version 2** d'installé.
 
 ### Cloner le repo
 Téléchargez le [zip](https://github.com/yuesubi/maria-sis/archive/refs/heads/main.zip)
