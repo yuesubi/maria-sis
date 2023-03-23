@@ -4,6 +4,7 @@ import pygame
 
 from typing import Any
 
+from ..constants import SCALE, UNIT
 from .level import LevelScene
 from .managers import Input, Scene, SceneId, Time
 
@@ -19,7 +20,10 @@ class Game:
         pygame.init()
         pygame.font.init()
         
-        self.window = pygame.display.set_mode((WIDTH * 16 * 2, HEIGHT * 16 * 2))
+        self.window = pygame.display.set_mode((
+            WIDTH * UNIT * SCALE,
+            HEIGHT * UNIT * SCALE
+        ))
         pygame.display.set_caption("Maria Sis")
     
         Scene.set_create_scene_callback(self.create_scene)
@@ -48,7 +52,7 @@ class Game:
     def run(self) -> None:
         """Faire tourner le jeu."""
 
-        surf = pygame.Surface((16*16, 13*16))
+        surf = pygame.Surface((WIDTH * UNIT, HEIGHT * UNIT))
         font = pygame.font.SysFont("", 16)
         
         time_bank: float = 0.0
