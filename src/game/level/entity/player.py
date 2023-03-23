@@ -1,6 +1,7 @@
 import pygame
 
 from ....constants import PLAYER_SPEED, UNIT
+from ...assets import MARIA_FRAMES
 from ...managers import Input, Time
 from ..camera import Camera
 from .entity import Entity
@@ -56,12 +57,8 @@ class Player(Entity):
             self.velocity.normalize_ip()
     
     def draw(self, camera: Camera) -> None:
-        # Dessiner le cercle qui représente le joueur
-        camera.draw_circle(
-            pygame.Color(255, 50, 50),
-            self.position, radius=UNIT / 2,
-            width=2
-        )
+        # Dessiner l'image du joueur
+        camera.draw_surface(self.position, MARIA_FRAMES[0])
     
     @property
     def collision_mask(self) -> pygame.mask.Mask:

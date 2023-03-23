@@ -1,5 +1,6 @@
 import pygame
 
+from ...assets import OVER_WORLD_TILES
 from ...managers import Input, Time
 from ..camera import Camera
 from .block import Block
@@ -29,11 +30,8 @@ class DecorativeBlock(Block):
     
     def draw(self, camera: Camera) -> None:
 
-        # TODO: Dessiner l'image du block à la place d'un carré
-
-        # Dessiner le carré qui représente le block
-        camera.draw_rect(
-            pygame.Color(255, 50, 255),
-            self.position, size=pygame.Vector2(16, 16),
-            width=2
+        # Dessiner l'image du block
+        camera.draw_surface(
+            self.position,
+            OVER_WORLD_TILES[0]
         )

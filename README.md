@@ -65,3 +65,4 @@ python maria-sis.py
     image.
 * 2023/03/23 0h10 Ajout d'un point d'apparition sur la carte.
 * 2023/03/23 0h30 Ajout de la détection de collision.
+* 2023/03/23 0h30 Ajout d'images dans le jeu pour Maria et DecorativeBlock
