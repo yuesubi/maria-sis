@@ -16,7 +16,7 @@ class LevelScene(Scene):
         self.camera: Camera = Camera()
 
         self.blocks: list[Block] = [
-            DecorativeBlock(pygame.Vector2(0, 16))
+            DecorativeBlock(pygame.Vector2(0, 1))
         ]
     
     def fixed_update(self) -> None:

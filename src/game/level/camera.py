@@ -1,5 +1,7 @@
 import pygame
 
+from ...constants import UNIT
+
 
 class Camera:
     """Camera pour le niveau."""
@@ -41,7 +43,7 @@ class Camera:
         
         pygame.draw.circle(
             self._target_surf, color,
-            self._target_middle + center - self.position, radius,
+            self._target_middle + UNIT*(center - self.position), radius,
             width
         )
     
@@ -59,7 +61,8 @@ class Camera:
         pygame.draw.rect(
             self._target_surf, color,
             pygame.Rect(
-                self._target_middle + position - self.position - size/2.0,
+                self._target_middle + UNIT * (position - self.position) -
+                    size / 2.0,
                 size
             ),
             width

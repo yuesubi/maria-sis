@@ -1,5 +1,6 @@
 import pygame
 
+from ....constants import PLAYER_SPEED, UNIT
 from ...managers import Input, Time
 from ..camera import Camera
 from .entity import Entity
@@ -19,12 +20,12 @@ class Player(Entity):
             # juste pas de classe Point dans pygame.
             position=pygame.Vector2(0, 0)
         )
-        self.velocity: pygame.Vector2 = pygame.Vector2(0, 0)
+        self.velocity: pygame.Vector2 = pygame.Vector2()
     
     def fixed_update(self) -> None:
         # Ajouter la vélocité à la position en la multipliant par le temps
         # écoulé entre les itérations
-        self.position += self.velocity * 5 * 16 * Time.fixed_delta_time
+        self.position += self.velocity * PLAYER_SPEED * Time.fixed_delta_time
 
     def update(self) -> None:
         # Mettre la vélocité au vecteur nul
@@ -51,6 +52,6 @@ class Player(Entity):
         # Dessiner le cercle qui représente le joueur
         camera.draw_circle(
             pygame.Color(255, 50, 50),
-            self.position, radius=8,
+            self.position, radius=UNIT / 2,
             width=2
         )
