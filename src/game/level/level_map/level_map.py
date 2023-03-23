@@ -17,22 +17,31 @@ class LevelMap:
     """Classe qui représente la carte d'un niveau."""
 
     @classmethod
-    def create_from_file(cls, file_path: str) -> 'LevelMap':
+    def create_from_file(cls, img_path: str) -> 'LevelMap':
+        """
+        Crée une carte du niveau à partir d'une image, ou les couleurs de pixels
+        sont associés à un type de block.
+        :img_path: Le chemin de l'image.
+        :return: La carte du niveau
+        """
         level_map = cls()
 
-        map_img = pygame.image.load(file_path).convert()
+        map_img = pygame.image.load(img_path).convert()
         for y in range(map_img.get_height()):
             for x in range(map_img.get_width()):
                 chunk_pos = f"{x // CHUNK_WIDTH}x{y // CHUNK_HEIGHT}"
 
+                # Crée un chunk si il y en a pas
                 chunk = level_map._chunks.get(chunk_pos)
                 if chunk is None:
                     chunk = Chunk()
                     level_map._chunks[chunk_pos] = chunk
                 
+                # Ajout du block
                 block_type = BLOCK_OF_COLOR.get(int(map_img.get_at((x, y))))
                 if block_type is not None:
-                    chunk[x % CHUNK_WIDTH, y % CHUNK_HEIGHT] = block_type(pygame.Vector2(x,y))
+                    block = block_type(pygame.Vector2(x,y))
+                    chunk[x % CHUNK_WIDTH, y % CHUNK_HEIGHT] = block
 
         return level_map
 
