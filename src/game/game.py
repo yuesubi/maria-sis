@@ -71,7 +71,7 @@ class Game:
                 Scene.current_scene.fixed_update()
                 time_bank -= Time.fixed_delta_time
             
-            surf.fill((0, 0, 0))
+            surf.fill((150, 150, 150))
             Scene.current_scene.render_to(surf)
 
             surf.blit(font.render(str(round(Time.fps)), False, (0, 255, 0)), (8, 8))

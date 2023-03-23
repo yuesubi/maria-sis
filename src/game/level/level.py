@@ -22,7 +22,8 @@ class LevelScene(Scene):
         self.level_map = LevelMap.create_from_file(map_path)
 
         self.player: Player = Player()
-        self.player.position = self.level_map.spawn_point
+        self.player.position = self.level_map.spawn_point + \
+            pygame.Vector2(0, -0.5)
         self.camera: Camera = Camera()
         self.camera.position = self.player.position
     
@@ -34,13 +35,19 @@ class LevelScene(Scene):
         )
 
         for block in self.level_map.near_blocks(self.camera.position):
+            block_tl = block.position - \
+                pygame.Vector2(block.collision_mask.get_size()) / 2 / UNIT
+            player_tl = self.player.position - \
+                pygame.Vector2(self.player.collision_mask.get_size()) / 2 / UNIT
+
             is_colliding = self.player.collision_mask.overlap(
                 block.collision_mask,
-                (self.player.position - block.position)*UNIT
+                (block_tl - player_tl) * UNIT
             )
+
             if is_colliding:
-                pass
                 # print((self.player.position - block.position).x)
+                pass
 
     def update(self) -> None:
         self.player.update()

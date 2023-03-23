@@ -9,5 +9,5 @@ MARIA_SPRITE_SHEET: pygame.Surface = pygame.image.load(MARIA_SPRITE_SHEET_PATH)
 
 # Liste des frames de Maria
 MARIA_FRAMES: list[pygame.Surface] = [
-    MARIA_SPRITE_SHEET.subsurface(8, 16, 16, 16)
+    MARIA_SPRITE_SHEET.subsurface(8, 0, 16, 32)
 ]

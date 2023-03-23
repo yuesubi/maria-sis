@@ -1,5 +1,5 @@
-CHUNK_WIDTH: int = 8
-CHUNK_HEIGHT: int = 8
+CHUNK_WIDTH: int = 10
+CHUNK_HEIGHT: int = 10
 CHUNK_SIZE: tuple[int, int] = CHUNK_WIDTH, CHUNK_HEIGHT
 
 UNIT: int = 16
