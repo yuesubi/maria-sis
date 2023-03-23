@@ -7,23 +7,30 @@ from .entity import Player
 from .level_map import LevelMap
 
 
+CAMERA_OFFSET: pygame.Vector2 = pygame.Vector2(0, -3)
+
+
 class LevelScene(Scene):
     """Scène de niveau."""
     
     def __init__(self) -> None:
         super().__init__()
 
-        self.player: Player = Player()
-        self.camera: Camera = Camera()
-
         map_path = os.path.join(os.path.dirname(__file__), "..", "..", "..",
             "maps", "sample.png")
         self.level_map = LevelMap.create_from_file(map_path)
+
+        self.player: Player = Player()
+        self.player.position = self.level_map.spawn_point
+        self.camera: Camera = Camera()
+        self.camera.position = self.player.position
     
     def fixed_update(self) -> None:
         self.player.fixed_update()
         self.camera.position = self.camera.position.lerp(
-            self.player.position, Time.fixed_delta_time * 4)
+            self.player.position + CAMERA_OFFSET,
+            Time.fixed_delta_time * 4
+        )
 
     def update(self) -> None:
         self.player.update()

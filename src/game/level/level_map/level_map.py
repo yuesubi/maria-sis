@@ -38,10 +38,13 @@ class LevelMap:
                     level_map._chunks[chunk_pos] = chunk
                 
                 # Ajout du block
-                block_type = BLOCK_OF_COLOR.get(int(map_img.get_at((x, y))))
+                color = map_img.get_at((x, y))
+                block_type = BLOCK_OF_COLOR.get(int(color))
                 if block_type is not None:
                     block = block_type(pygame.Vector2(x,y))
                     chunk[x % CHUNK_WIDTH, y % CHUNK_HEIGHT] = block
+                elif color == pygame.Color(0, 255, 0):
+                    level_map.spawn_point = pygame.Vector2(x, y)
 
         return level_map
 
@@ -49,6 +52,7 @@ class LevelMap:
         """Constructeur."""
 
         self._chunks: dict[str, Chunk] = dict()
+        self.spawn_point: pygame.Vector2 = pygame.Vector2()
     
     def near_blocks(self, position: pygame.Vector2) -> Iterator[Block]:
         """
