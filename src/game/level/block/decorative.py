@@ -6,23 +6,23 @@ from ..camera import Camera
 from .block import Block
 
 
-# XXX: Voici un example pour un block décoratif, pour que tu puisse voir comment
+# XXX: Voici un example pour un bloc décoratif, pour que tu puisse voir comment
 # hériter de DecorativeBlock et utiliser Camera
 
 
 class DecorativeBlock(Block):
-    """Classe d'un exemple de block décoratif."""
+    """Classe d'un exemple de bloc décoratif."""
 
     def __init__(self, position: pygame.Vector2) -> None:
         """
         Constructeur.
-        :param position: La position du block.
+        :param position: La position du bloc.
         """
         super().__init__(
             position
         )
 
-        # TODO: Prendre en argument l'image du block et la stocker pour pouvoir
+        # TODO: Prendre en argument l'image du bloc et la stocker pour pouvoir
         # la dessiner
 
         # Remplir le masque de collision
@@ -30,7 +30,7 @@ class DecorativeBlock(Block):
     
     def draw(self, camera: Camera) -> None:
 
-        # Dessiner l'image du block
+        # Dessiner l'image du bloc
         camera.draw_surface(
             self.position,
             OVER_WORLD_TILES[0]

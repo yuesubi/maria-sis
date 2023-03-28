@@ -8,14 +8,14 @@ from ..camera import Camera
 
 class Block(ABC):
     """
-    Classe abstraite pour un block. Tous les blocks doivent hériter de cette
+    Classe abstraite pour un bloc. Tous les blocs doivent hériter de cette
     classe et implémenter les méthode abstraites.
     """
 
     def __init__(self, position: pygame.Vector2) -> None:
         """
         Constructeur.
-        :param position: La position du block.
+        :param position: La position du bloc.
         """
         super().__init__()
 
@@ -37,7 +37,7 @@ class Block(ABC):
     @abstractmethod
     def draw(self, camera: Camera) -> None:
         """
-        Dessiner le block à l'écran. (Doit être implémentée par la classe
+        Dessiner le bloc à l'écran. (Doit être implémentée par la classe
         enfant)
         :param camera: La camera qui fait le rendu.
         """
