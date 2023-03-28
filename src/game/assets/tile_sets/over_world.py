@@ -4,7 +4,7 @@ import pygame
 
 # Chargement des tuiles du monde
 OVER_WORLD_TILE_SET_PATH = os.path.join(os.path.dirname(__file__), "..", "..",
-    "..", "..", "assets", "Tilesets", "OverWorld.png")
+    "..", "..", "assets", "tilesets", "OverWorld.png")
 OVER_WORLD_TILE_SET: pygame.Surface = \
     pygame.image.load(OVER_WORLD_TILE_SET_PATH)
 
