@@ -4,8 +4,7 @@ import pygame
 
 # Chargement de l'ensemble des tuiles de Maria
 MARIA_SPRITE_SHEET_PATH = os.path.join(os.path.dirname(__file__), "..", "..",
-    "..", "..", "assets", "Characters", "Mario.png")
-print(MARIA_SPRITE_SHEET_PATH)
+    "..", "..", "assets", "characters", "maria.png")
 MARIA_SPRITE_SHEET: pygame.Surface = pygame.image.load(MARIA_SPRITE_SHEET_PATH)
 
 # Liste des frames de Maria
