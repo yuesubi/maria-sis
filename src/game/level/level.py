@@ -1,8 +1,10 @@
 import os
+import math
 import pygame
 
 from ...constants import UNIT
 from ..managers import Time, Scene
+from .block import Block
 from .camera import Camera
 from .entity import Player
 from .level_map import LevelMap
@@ -43,25 +45,15 @@ class LevelScene(Scene):
         Detection des collisions du joueur.
         :param prev_position: La position du joueur avant le mouvement.
         """
+        player_rect = self.player.rect_collider
+        
         for block in self.level_map.near_blocks(self.camera.position):
-            block_size = pygame.Vector2(block.collision_mask.get_size()) / UNIT
-            block_tl = block.position - block_size / 2
-
-            player_size = pygame.Vector2(self.player.collision_mask.get_size())
-            player_size /= UNIT
-            player_tl = self.player.position - player_size / 2
-
-            is_colliding = self.player.collision_mask.overlap(
-                block.collision_mask,
-                (block_tl - player_tl) * UNIT
-            )
-
-            if is_colliding:
-                self.resolve_player_collision(prev_position)
-    
-    def resolve_player_collision(self, prev_position: pygame.Vector2) -> None:
-        # print((self.player.position - block.position).x)
-        pass
+            if block.rect_collider.is_colliding_rect(player_rect):
+                block.rect_collider.resolve_collision_by_moving_other(
+                    player_rect
+                )
+        
+        self.player.position = player_rect.position - pygame.Vector2(0, 0.5)
 
     def update(self) -> None:
         self.player.update()

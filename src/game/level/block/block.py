@@ -1,9 +1,9 @@
 import pygame
 
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 
-from ....constants import UNIT
 from ..camera import Camera
+from ..collider import RectCollider
 
 
 class Block(ABC):
@@ -22,17 +22,13 @@ class Block(ABC):
         # La position est un vecteur mais en gros c'est un point, il y a juste
         # pas de classe Point dans pygame.
         self.position: pygame.Vector2 = position
-
-        # Masque pour les collisions
-        self._collision_mask: pygame.mask.Mask = pygame.mask.Mask((UNIT, UNIT))
     
-    @property
-    def collision_mask(self) -> pygame.mask.Mask:
+    @abstractproperty
+    def rect_collider(self) -> RectCollider:
         """
-        Assesseur du masque de collisions.
-        :return: Le masque de collisions.
+        Assesseur du rectangle de collision.
+        :return: Le rectangle de collision.
         """
-        return self._collision_mask
 
     @abstractmethod
     def draw(self, camera: Camera) -> None:

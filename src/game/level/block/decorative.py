@@ -1,8 +1,9 @@
 import pygame
 
+from ....constants import UNIT
 from ...assets import OVER_WORLD_TILES
-from ...managers import Input, Time
 from ..camera import Camera
+from ..collider import RectCollider
 from .block import Block
 
 
@@ -24,12 +25,12 @@ class DecorativeBlock(Block):
 
         # TODO: Prendre en argument l'image du bloc et la stocker pour pouvoir
         # la dessiner
-
-        # Remplir le masque de collision
-        self.collision_mask.fill()
+    
+    @property
+    def rect_collider(self) -> RectCollider:
+        return RectCollider(self.position.copy(), pygame.Vector2(1, 1))
     
     def draw(self, camera: Camera) -> None:
-
         # Dessiner l'image du bloc
         camera.draw_surface(
             self.position,

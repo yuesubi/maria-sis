@@ -4,6 +4,7 @@ from ....constants import PLAYER_SPEED, UNIT
 from ...assets import MARIA_FRAMES
 from ...managers import Input, Time
 from ..camera import Camera
+from ..collider import RectCollider
 from .entity import Entity
 
 
@@ -26,6 +27,14 @@ class Player(Entity):
         # Masque pour les collisions
         self._collision_mask: pygame.mask.Mask = pygame.mask.from_surface(
             MARIA_FRAMES[0]
+        )
+    
+    @property
+    def rect_collider(self) -> RectCollider:
+        # Rectangle de collision quand Maria est petite
+        return RectCollider(
+            self.position.copy() + pygame.Vector2(0, 0.5),
+            pygame.Vector2(1, 1)
         )
 
     def fixed_update(self) -> None:
@@ -57,11 +66,3 @@ class Player(Entity):
     def draw(self, camera: Camera) -> None:
         # Dessiner l'image du joueur
         camera.draw_surface(self.position, MARIA_FRAMES[0])
-    
-    @property
-    def collision_mask(self) -> pygame.mask.Mask:
-        """
-        Assesseur du masque pour les collisions.
-        :return: Le masque pour les collisions.
-        """
-        return self._collision_mask
