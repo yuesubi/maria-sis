@@ -67,13 +67,13 @@ class RectCollider:
         x_distance = double_size.x - abs(other.x - self.x)
         y_distance = double_size.y - abs(other.y - self.y)
 
-        if x_distance < y_distance:
-            if other.x - self.x > 0:
-                other.x += x_distance
-            else:
-                other.x -= x_distance
-        else:
+        if y_distance < x_distance:
             if other.y - self.y > 0:
                 other.y += y_distance
             else:
                 other.y -= y_distance
+        else:
+            if other.x - self.x > 0:
+                other.x += x_distance
+            else:
+                other.x -= x_distance
