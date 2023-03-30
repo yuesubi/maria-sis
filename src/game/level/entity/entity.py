@@ -1,8 +1,9 @@
 import pygame
 
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 
 from ..camera import Camera
+from ..collider import RectCollider
 
 
 class Entity(ABC):
@@ -18,6 +19,13 @@ class Entity(ABC):
         """
         super().__init__()
         self.position: pygame.Vector2 = position
+    
+    @abstractproperty
+    def rect_collider(self) -> RectCollider:
+        """
+        Assesseur du rectangle de collision.
+        :return: Le rectangle de collision.
+        """
 
     @abstractmethod
     def update(self) -> None:
