@@ -1,6 +1,6 @@
 import pygame
 
-from ....constants import PLAYER_SPEED, UNIT
+from ....constants import EPSILON, PLAYER_SPEED, UNIT
 from ...assets import MARIA_FRAMES
 from ...managers import Input, Time
 from ..camera import Camera

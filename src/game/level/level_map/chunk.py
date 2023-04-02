@@ -28,7 +28,7 @@ class Chunk:
         assert x_y[1] < CHUNK_HEIGHT and not (x_y[1] < 0)
         self._blocks[x_y[0] + x_y[1] * CHUNK_WIDTH] = block
 
-    def __getitem__(self, x_y: tuple[int, int]) -> Block:
+    def __getitem__(self, x_y: tuple[int, int]) -> Block | None:
         """
         Get the content of a cell from the chunk.
         :param x_y: The position of the cell.

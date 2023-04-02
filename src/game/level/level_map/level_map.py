@@ -3,7 +3,7 @@ import pygame
 from itertools import chain
 from typing import Iterator
 
-from ....constants import CHUNK_WIDTH, CHUNK_HEIGHT
+from ....constants import CHUNK_WIDTH, CHUNK_HEIGHT, UNIT
 from ..block import Block, DecorativeBlock
 from .chunk import Chunk
 
@@ -27,6 +27,9 @@ class LevelMap:
         level_map = cls()
 
         map_img = pygame.image.load(img_path).convert()
+        level_map.top_left.update(0, 0)
+        level_map.bottom_right = pygame.Vector2(map_img.get_size()) * UNIT
+
         for y in range(map_img.get_height()):
             for x in range(map_img.get_width()):
                 chunk_pos = f"{x // CHUNK_WIDTH}x{y // CHUNK_HEIGHT}"
@@ -53,6 +56,34 @@ class LevelMap:
 
         self._chunks: dict[str, Chunk] = dict()
         self.spawn_point: pygame.Vector2 = pygame.Vector2()
+
+        self.top_left: pygame.Vector2 = pygame.Vector2()
+        self.bottom_right: pygame.Vector2 = pygame.Vector2()
+    
+    def block_at(self, position: pygame.Vector2) -> Block | None:
+        """
+        Récupérer le block à la position donnée.
+        :param position: La position du block à récupérer.
+        :return: Le block si il est trouvé ou None sinon.
+        """
+
+        # Trouver la position du chunk et le récupérer.
+        chunk_pos = (
+            int(position.x) // CHUNK_WIDTH,
+            int(position.y) // CHUNK_HEIGHT
+        )
+        chunk = self._chunks.get(f"{chunk_pos[0]}x{chunk_pos[1]}")
+
+        block = None
+        
+        # Si le chunk existe récupérer le block
+        if chunk is not None:
+            block = chunk[
+                int(position.x) - chunk_pos[0] * CHUNK_WIDTH,
+                int(position.y) - chunk_pos[1] * CHUNK_HEIGHT
+            ]
+        
+        return block
     
     def near_blocks(self, position: pygame.Vector2) -> Iterator[Block]:
         """

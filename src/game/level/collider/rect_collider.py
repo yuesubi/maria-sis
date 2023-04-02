@@ -1,4 +1,7 @@
+import sys
 import pygame
+
+from ....constants import EPSILON
 
 
 class RectCollider:
@@ -55,6 +58,36 @@ class RectCollider:
         """
         return abs(self.x - other.x) < (self.width + other.width) / 2 and \
             abs(self.y - other.y) < (self.height + other.height) / 2
+    
+    def resolve_collision_vector(self, other: 'RectCollider',
+            other_previous_pos: pygame.Vector2) -> pygame.Vector2:
+        
+        # Calculer la distance entre les deux objets qu'il faut avoir pour qu'il
+        # n'y ai pas de collision
+        double_size = (self.size + other.size) / 2
+        
+        # Rectangle de collision de other après le déplacement Y
+        moving = RectCollider(
+            pygame.Vector2(other_previous_pos.x, other.y),
+            other.size
+        )
+
+        # Si il y a collision
+        if self.is_colliding_rect(moving):
+            # Corriger la position Y pour qu'il n'y ai plus de collision
+            y_distance = double_size.y - abs(moving.y - self.y) + EPSILON
+            moving.y += y_distance * (1 if moving.y - self.y > 0 else -1)
+        
+        # Rectangle de collision de other après le déplacement X
+        moving.x = other.position.x
+
+        if self.is_colliding_rect(moving):
+            # Corriger la position X pour qu'il n'y ai plus de collision
+            x_distance = double_size.x - abs(moving.x - self.x) + EPSILON
+            moving.x += x_distance * (1 if moving.x - self.x > 0 else -1)
+
+        # Retourner le vecteur pour résoudre la collision
+        return moving.position - other.position
 
     def resolve_collision_by_moving_other(self, other: 'RectCollider') -> None:
         """

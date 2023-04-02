@@ -1,8 +1,8 @@
 import os
-import math
+import sys
 import pygame
 
-from ...constants import UNIT
+from ...constants import EPSILON, UNIT
 from ..managers import Time, Scene
 from .block import Block
 from .camera import Camera
@@ -30,7 +30,7 @@ class LevelScene(Scene):
         self.camera.position = self.player.position
     
     def fixed_update(self) -> None:
-        prev_position = self.player.position
+        prev_position = self.player.rect_collider.position
         self.player.fixed_update()
 
         self.detect_player_collision(prev_position)
@@ -45,15 +45,42 @@ class LevelScene(Scene):
         Detection des collisions du joueur.
         :param prev_position: La position du joueur avant le mouvement.
         """
-        player_rect = self.player.rect_collider
-        
-        for block in self.level_map.near_blocks(self.camera.position):
-            if block.rect_collider.is_colliding_rect(player_rect):
-                block.rect_collider.resolve_collision_by_moving_other(
-                    player_rect
+
+        # Trouver les blocks à vérifier (il y a besoin de vérifier que les
+        # blocks autour du joueur)
+        blocks_to_check = filter(
+            # Seulement les blocks non None
+            lambda block: block is not None,
+            [
+                # Récupérer le block
+                self.level_map.block_at(
+                    # Calculer la position du block
+                    pygame.Vector2(position) + prev_position
                 )
-        
-        self.player.position = player_rect.position - pygame.Vector2(0, 0.5)
+                for position in [
+                    # Position relative des blocks par rapport au joueur
+                    (0, 0),
+                    (0, -1), (1, 0), (0, 1), (1, 0),
+                    (1, -1), (1, 1), (-1, 1), (-1, -1)
+                ]
+            ]
+        )
+
+        # Pour chaque block à vérifier
+        for block in blocks_to_check:
+            # Si il y a collision
+            if block.rect_collider.is_colliding_rect(self.player.rect_collider):
+                # Résoudre la collision
+                resolve_vector = block.rect_collider.resolve_collision_vector(
+                    self.player.rect_collider, prev_position
+                )
+                self.player.position += resolve_vector
+
+                # Remettre à zéro la vélocité si besoin.
+                if abs(resolve_vector.x) > EPSILON:
+                    self.player.velocity.x = 0.0
+                if abs(resolve_vector.y) > EPSILON:
+                    self.player.velocity.y = 0.0
 
     def update(self) -> None:
         self.player.update()
