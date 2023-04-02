@@ -39,6 +39,17 @@ class LevelScene(Scene):
             self.player.position + CAMERA_OFFSET,
             Time.fixed_delta_time * 4
         )
+
+        self.camera.position.x = min(max(
+            self.camera.position.x,
+            self.level_map.top_left.x),
+            self.level_map.bottom_right.x
+        )
+        self.camera.position.y = min(max(
+            self.camera.position.y,
+            self.level_map.top_left.y),
+            self.level_map.bottom_right.y
+        )
     
     def detect_player_collision(self, prev_position: pygame.Vector2) -> None:
         """
