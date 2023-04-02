@@ -68,4 +68,4 @@ python maria-sis.py
 * 2023/03/23 0h30 Ajout d'images dans le jeu pour Maria et DecorativeBlock
 * 2023/03/23 0h10 Petits changements
 * 2023/03/29 2h00 Ajout des collisions
-* 2023/04/02 2h00 Correction des bugs des collisions
+* 2023/04/02 3h00 Correction des bugs des collisions

@@ -59,54 +59,44 @@ class RectCollider:
         return abs(self.x - other.x) < (self.width + other.width) / 2 and \
             abs(self.y - other.y) < (self.height + other.height) / 2
     
-    def resolve_collision_vector(self, other: 'RectCollider',
-            other_previous_pos: pygame.Vector2) -> pygame.Vector2:
-        
-        # Calculer la distance entre les deux objets qu'il faut avoir pour qu'il
-        # n'y ai pas de collision
-        double_size = (self.size + other.size) / 2
-        
-        # Rectangle de collision de other après le déplacement Y
-        moving = RectCollider(
-            pygame.Vector2(other_previous_pos.x, other.y),
-            other.size
-        )
-
-        # Si il y a collision
-        if self.is_colliding_rect(moving):
-            # Corriger la position Y pour qu'il n'y ai plus de collision
-            y_distance = double_size.y - abs(moving.y - self.y) + EPSILON
-            moving.y += y_distance * (1 if moving.y - self.y > 0 else -1)
-        
-        # Rectangle de collision de other après le déplacement X
-        moving.x = other.position.x
-
-        if self.is_colliding_rect(moving):
-            # Corriger la position X pour qu'il n'y ai plus de collision
-            x_distance = double_size.x - abs(moving.x - self.x) + EPSILON
-            moving.x += x_distance * (1 if moving.x - self.x > 0 else -1)
-
-        # Retourner le vecteur pour résoudre la collision
-        return moving.position - other.position
-
-    def resolve_collision_by_moving_other(self, other: 'RectCollider') -> None:
+    def resolve_collision_x_rewind(self, other: 'RectCollider',
+            other_previous_pos: pygame.Vector2) -> float:
         """
-        Résout la collision en déplaçant l'autre rectangle.
-        :param other_rect: L'autre rectangle.
+        Trouver la part du mouvement effectué qui peut être conservée pour que
+        la collision soit résolue avec l'axe x.
+        :param other: Le rectangle de collision qui doit être déplacé.
+        :param other_previous_pos: La position avant le mouvement.
+        :return: Part qui doit être faite en marche arrière.
         """
         double_size = (self.size + other.size) / 2
+        delta_pos = other.position - other_previous_pos
 
-        # Calculer la distance nécessaire pour sortir pour chaque axe
-        x_distance = double_size.x - abs(other.x - self.x)
-        y_distance = double_size.y - abs(other.y - self.y)
+        t_x = 0.0
+        if delta_pos.x != 0.0:
+            t_x = min(
+                (self.x - other_previous_pos.x + double_size.x) / delta_pos.x,
+                (self.x - other_previous_pos.x - double_size.x) / delta_pos.x
+            )
+        
+        return t_x
+        
+    def resolve_collision_y_rewind(self, other: 'RectCollider',
+            other_previous_pos: pygame.Vector2) -> float:
+        """
+        Trouver la part du mouvement effectué qui peut être conservée pour que
+        la collision soit résolue avec l'axe y.
+        :param other: Le rectangle de collision qui doit être déplacé.
+        :param other_previous_pos: La position avant le mouvement.
+        :return: Part qui doit être faite en marche arrière.
+        """
+        double_size = (self.size + other.size) / 2
+        delta_pos = other.position - other_previous_pos
 
-        if y_distance < x_distance:
-            if other.y - self.y > 0:
-                other.y += y_distance
-            else:
-                other.y -= y_distance
-        else:
-            if other.x - self.x > 0:
-                other.x += x_distance
-            else:
-                other.x -= x_distance
+        t_y = 0.0
+        if delta_pos.y != 0.0:
+            t_y = min(
+                (self.y - other_previous_pos.y + double_size.y) / delta_pos.y,
+                (self.y - other_previous_pos.y - double_size.y) / delta_pos.y
+            )
+        
+        return t_y

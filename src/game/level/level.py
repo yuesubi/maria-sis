@@ -70,28 +70,56 @@ class LevelScene(Scene):
                 )
                 for position in [
                     # Position relative des blocks par rapport au joueur
-                    (0, 0),
+                    (1, -1), (1, 1), (-1, 1), (-1, -1),
                     (0, -1), (1, 0), (0, 1), (1, 0),
-                    (1, -1), (1, 1), (-1, 1), (-1, -1)
+                    (0, 0)
                 ]
             ]
         )
+
+        # Part du mouvement effectué à conserver pour chaque axe
+        x_t = 1.0
+        y_t = 1.0
 
         # Pour chaque block à vérifier
         for block in blocks_to_check:
             # Si il y a collision
             if block.rect_collider.is_colliding_rect(self.player.rect_collider):
-                # Résoudre la collision
-                resolve_vector = block.rect_collider.resolve_collision_vector(
-                    self.player.rect_collider, prev_position
+                # Calculer la part qu'on peut conserver pour que la collision
+                # soit résolue
+                new_x_t = min(
+                    x_t,
+                    block.rect_collider.resolve_collision_x_rewind(
+                        self.player.rect_collider, prev_position
+                    )
                 )
-                self.player.position += resolve_vector
+                new_y_t = min(
+                    y_t,
+                    block.rect_collider.resolve_collision_y_rewind(
+                        self.player.rect_collider, prev_position
+                    )
+                )
 
-                # Remettre à zéro la vélocité si besoin.
-                if abs(resolve_vector.x) > EPSILON:
-                    self.player.velocity.x = 0.0
-                if abs(resolve_vector.y) > EPSILON:
-                    self.player.velocity.y = 0.0
+                # Choisir la plus grande part
+                if new_x_t > new_y_t:
+                    x_t = min(new_x_t, x_t)
+                else:
+                    y_t = min(new_y_t, y_t)
+        
+        delta_position = self.player.rect_collider.position - prev_position
+        resolve_vector = pygame.Vector2(
+            delta_position.x * x_t,
+            delta_position.y * y_t
+        )
+
+        self.player.position -= delta_position
+        self.player.position += resolve_vector
+
+        # Remettre à zéro la vélocité si besoin.
+        if x_t + EPSILON < 1.0:
+            self.player.velocity.x = 0.0
+        if y_t + EPSILON < 1.0:
+            self.player.velocity.y = 0.0
 
     def update(self) -> None:
         self.player.update()
