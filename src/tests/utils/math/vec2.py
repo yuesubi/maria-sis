@@ -71,3 +71,13 @@ class Vec2Tests(unittest.TestCase):
             self.assertTrue(v != c)
             v = c.copy
             self.assertTrue(v == c)
+    
+    def test_dot(self) -> None:
+        """Test de la méthode dot."""
+        for _ in range(100):
+            x = UTRandom.rnd.random()
+            y = UTRandom.rnd.random()
+            self.assertAlmostEqual(Vec2(x, y).dot(Vec2(x, 0)), x ** 2)
+            self.assertAlmostEqual(Vec2(x, y).dot(Vec2(-y, x)), 0.0)
+            self.assertAlmostEqual(Vec2(x, y).dot(Vec2(x, y)), x**2 + y**2)
+            self.assertLessEqual(Vec2(x, y).dot(Vec2(-x, -y)), 0.0)

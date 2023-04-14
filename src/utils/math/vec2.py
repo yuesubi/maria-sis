@@ -1,5 +1,6 @@
 """Vecteur mathématique à 2 dimensions."""
 
+import math
 from typing import Any
 
 from ..custom_decorators import ClassGetter
@@ -100,6 +101,28 @@ class Vec2:
         :return: L'interpolation linéaire calculée.
         """
         return self + (target - self) * amount
+    
+    def rotate(self, theta: float) -> None:
+        """
+        Faire pivoter cd Vec2 de theta radians.
+        :param theta: Le nombre de radians duquel il faut tourner.
+        """
+        # Calcul de rotation avec les nombres complexes
+        # (x + i*y) * (cos(theta) + i*sin(theta)) =
+        # x*cos(theta) - y*sin(theta) + i*(x*sin(theta) + y*cos(theta))
+        x, y = self.x, self.y
+        cos_theta, sin_theta = math.cos(theta), math.sin(theta)
+        self.x, self.y = x*cos_theta - y*sin_theta, x*sin_theta + y*cos_theta
+    
+    def rotation(self, theta: float) -> 'Vec2':
+        """
+        Calculer la rotation de ce Vec2 de theta radians.
+        :param theta: Le nombre de radians duquel il faut tourner.
+        :return: La rotation de ce Vec2.
+        """
+        vec = self.copy
+        vec.rotate(theta)
+        return vec
     
     def __add__(self, other: 'Vec2') -> 'Vec2':
         """Somme de ce Vec2 et de other."""
