@@ -40,8 +40,8 @@ class Camera:
         """
         self._target_surf.blit(
             surface,
-            pygame.Vector2((self._target_middle + UNIT*(center - self.position) - \
-                Vec2.from_xy(surface.get_size()) / 2.0).xy)
+            (self._target_middle + UNIT*(center - self.position) - \
+                Vec2.from_xy(surface.get_size()) / 2.0).xy
         )
     
     def draw_circle(self, color: pygame.Color, center: Vec2,

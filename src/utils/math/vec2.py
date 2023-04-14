@@ -128,9 +128,9 @@ class Vec2:
         """Somme de ce Vec2 et de other."""
         return Vec2(self.x + other.x, self.y + other.y)
     
-    def __radd__(self, other: 'Vec2') -> 'Vec2':
-        """Somme de ce Vec2 et de other."""
-        return self.__add__(other)
+    #def __radd__(self, other: 'Vec2') -> 'Vec2':
+    #    """Somme de ce Vec2 et de other."""
+    #    return self.__add__(other)
     
     def __iadd__(self, other: 'Vec2') -> 'Vec2':
         """Ajouter other à ce Vec2."""
@@ -142,9 +142,9 @@ class Vec2:
         """Différence entre ce Vec2 et other."""
         return Vec2(self.x - other.x, self.y - other.y)
 
-    def __rsub__(self, other: 'Vec2') -> 'Vec2':
-        """Différence entre other et ce Vec2."""
-        return Vec2(other.x - self.x, other.y - self.y)
+    #def __rsub__(self, other: 'Vec2') -> 'Vec2':
+    #    """Différence entre other et ce Vec2."""
+    #    return Vec2(other.x - self.x, other.y - self.y)
     
     def __isub__(self, other: 'Vec2') -> 'Vec2':
         """Soustraire other à ce Vec2."""
@@ -168,11 +168,11 @@ class Vec2:
     
     def __div__(self, inv_scalar: float) -> 'Vec2':
         """Rapport entre ce Vec2 et inv_scalar."""
-        return Vec2(self.x * inv_scalar, self.y * inv_scalar)
+        return Vec2(self.x / inv_scalar, self.y / inv_scalar)
     
     def __truediv__(self, inv_scalar: float) -> 'Vec2':
         """Rapport entre ce Vec2 et inv_scalar."""
-        return Vec2(self.x * inv_scalar, self.y * inv_scalar)
+        return Vec2(self.x / inv_scalar, self.y / inv_scalar)
     
     def __idiv__(self, inv_scalar: float) -> 'Vec2':
         """Diviser ce Vec2 par inv_scalar."""
