@@ -2,6 +2,7 @@ import pygame
 
 from abc import ABC, abstractmethod, abstractproperty
 
+from ....utils import Vec2
 from ..camera import Camera
 from ..collider import RectCollider
 
@@ -12,13 +13,13 @@ class Entity(ABC):
     cette classe et implémenter les méthode abstraites.
     """
 
-    def __init__(self, position: pygame.Vector2) -> None:
+    def __init__(self, position: Vec2) -> None:
         """
         Constructeur.
         :param position: La position de l'entité.
         """
         super().__init__()
-        self.position: pygame.Vector2 = position
+        self.position: Vec2 = position
     
     @abstractproperty
     def rect_collider(self) -> RectCollider:

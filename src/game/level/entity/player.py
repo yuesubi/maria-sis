@@ -1,6 +1,7 @@
 import pygame
 
 from ....constants import EPSILON, PLAYER_SPEED, UNIT
+from ....utils import Vec2
 from ...assets import MARIA_FRAMES
 from ...managers import Input, Time
 from ..camera import Camera
@@ -20,9 +21,9 @@ class Player(Entity):
         super().__init__(
             # La position est un vecteur mais en gros c'est un point, il y a
             # juste pas de classe Point dans pygame.
-            position=pygame.Vector2(0, 0)
+            position=Vec2.null
         )
-        self.velocity: pygame.Vector2 = pygame.Vector2()
+        self.velocity: Vec2 = Vec2.null
 
         # Masque pour les collisions
         self._collision_mask: pygame.mask.Mask = pygame.mask.from_surface(
@@ -33,15 +34,15 @@ class Player(Entity):
     def rect_collider(self) -> RectCollider:
         # Rectangle de collision quand Maria est petite
         return RectCollider(
-            self.position.copy() + pygame.Vector2(0, 0.5),
-            pygame.Vector2(1, 1)
+            self.position + Vec2(0, 0.5),
+            Vec2(1, 1)
         )
 
     def fixed_update(self) -> None:
         # Ajouter la vélocité à la position en la multipliant par le temps
         # écoulé entre les itérations
         self.velocity.x *= 0.9
-        self.velocity += pygame.Vector2(0, 15) * Time.fixed_delta_time
+        self.velocity += Vec2(0, 15) * Time.fixed_delta_time
         self.position += self.velocity * Time.fixed_delta_time
 
     def update(self) -> None:

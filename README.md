@@ -69,3 +69,4 @@ python maria-sis.py
 * 2023/03/23 0h10 Petits changements
 * 2023/03/29 2h00 Ajout des collisions
 * 2023/04/02 3h00 Correction des bugs des collisions
+* 2023/04/02 0h45 Création d'une classe de vecteur 2D

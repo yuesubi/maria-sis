@@ -4,6 +4,7 @@ from itertools import chain
 from typing import Iterator
 
 from ....constants import CHUNK_WIDTH, CHUNK_HEIGHT, UNIT
+from ....utils import Vec2
 from ..block import Block, DecorativeBlock
 from .chunk import Chunk
 
@@ -27,8 +28,8 @@ class LevelMap:
         level_map = cls()
 
         map_img = pygame.image.load(img_path).convert()
-        level_map.top_left.update(0, 0)
-        level_map.bottom_right = pygame.Vector2(map_img.get_size()) * UNIT
+        level_map.top_left.xy = 0, 0
+        level_map.bottom_right = Vec2.from_xy(map_img.get_size()) * UNIT
 
         for y in range(map_img.get_height()):
             for x in range(map_img.get_width()):
@@ -44,10 +45,10 @@ class LevelMap:
                 color = map_img.get_at((x, y))
                 block_type = BLOCK_OF_COLOR.get(int(color))
                 if block_type is not None:
-                    block = block_type(pygame.Vector2(x,y))
+                    block = block_type(Vec2(x,y))
                     chunk[x % CHUNK_WIDTH, y % CHUNK_HEIGHT] = block
                 elif color == pygame.Color(0, 255, 0):
-                    level_map.spawn_point = pygame.Vector2(x, y)
+                    level_map.spawn_point = Vec2(x, y)
 
         return level_map
 
@@ -55,12 +56,12 @@ class LevelMap:
         """Constructeur."""
 
         self._chunks: dict[str, Chunk] = dict()
-        self.spawn_point: pygame.Vector2 = pygame.Vector2()
+        self.spawn_point: Vec2 = Vec2.null
 
-        self.top_left: pygame.Vector2 = pygame.Vector2()
-        self.bottom_right: pygame.Vector2 = pygame.Vector2()
+        self.top_left: Vec2 = Vec2.null
+        self.bottom_right: Vec2 = Vec2.null
     
-    def block_at(self, position: pygame.Vector2) -> Block | None:
+    def block_at(self, position: Vec2) -> Block | None:
         """
         Récupérer le block à la position donnée.
         :param position: La position du block à récupérer.
@@ -85,7 +86,7 @@ class LevelMap:
         
         return block
     
-    def near_blocks(self, position: pygame.Vector2) -> Iterator[Block]:
+    def near_blocks(self, position: Vec2) -> Iterator[Block]:
         """
         Récupérer les blocks qui proches de la position donnée.
         :param position: La position à utiliser.
@@ -95,7 +96,7 @@ class LevelMap:
             chunk.blocks for chunk in self._near_chunks(position)
         ])
 
-    def _near_chunks(self, position: pygame.Vector2) -> list[Chunk]:
+    def _near_chunks(self, position: Vec2) -> list[Chunk]:
         """
         Récupérer les chunks qui sont à coté de la position donnée.
         :param position: La position à utiliser.

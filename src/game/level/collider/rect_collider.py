@@ -2,20 +2,21 @@ import sys
 import pygame
 
 from ....constants import EPSILON
+from ....utils import Vec2
 
 
 class RectCollider:
     """Détecteur de collision rectangulaire."""
 
-    def __init__(self, position: pygame.Vector2, size: pygame.Vector2) -> None:
+    def __init__(self, position: Vec2, size: Vec2) -> None:
         """
         Constructeur.
         :param position: La position du centre du rectangle.
         :param size: La taille du rectangle.
         """
         # Le centre du rectangle
-        self.position: pygame.Vector2 = position
-        self.size: pygame.Vector2 = size
+        self.position: Vec2 = position
+        self.size: Vec2 = size
 
     @property
     def x(self) -> float:
@@ -60,7 +61,7 @@ class RectCollider:
             abs(self.y - other.y) < (self.height + other.height) / 2
     
     def resolve_collision_x_rewind(self, other: 'RectCollider',
-            other_previous_pos: pygame.Vector2) -> float:
+            other_previous_pos: Vec2) -> float:
         """
         Trouver la part du mouvement effectué qui peut être conservée pour que
         la collision soit résolue avec l'axe x.
@@ -68,20 +69,20 @@ class RectCollider:
         :param other_previous_pos: La position avant le mouvement.
         :return: Part qui doit être faite en marche arrière.
         """
-        double_size = (self.size + other.size) / 2
+        double_size_x = (self.size.x + other.size.x) / 2.0
         delta_pos = other.position - other_previous_pos
 
         t_x = 0.0
         if delta_pos.x != 0.0:
             t_x = min(
-                (self.x - other_previous_pos.x + double_size.x) / delta_pos.x,
-                (self.x - other_previous_pos.x - double_size.x) / delta_pos.x
+                (self.x - other_previous_pos.x + double_size_x) / delta_pos.x,
+                (self.x - other_previous_pos.x - double_size_x) / delta_pos.x
             )
         
         return t_x
         
     def resolve_collision_y_rewind(self, other: 'RectCollider',
-            other_previous_pos: pygame.Vector2) -> float:
+            other_previous_pos: Vec2) -> float:
         """
         Trouver la part du mouvement effectué qui peut être conservée pour que
         la collision soit résolue avec l'axe y.
@@ -89,14 +90,14 @@ class RectCollider:
         :param other_previous_pos: La position avant le mouvement.
         :return: Part qui doit être faite en marche arrière.
         """
-        double_size = (self.size + other.size) / 2
+        double_size_y = (self.size.y + other.size.y) / 2.0
         delta_pos = other.position - other_previous_pos
 
         t_y = 0.0
         if delta_pos.y != 0.0:
             t_y = min(
-                (self.y - other_previous_pos.y + double_size.y) / delta_pos.y,
-                (self.y - other_previous_pos.y - double_size.y) / delta_pos.y
+                (self.y - other_previous_pos.y + double_size_y) / delta_pos.y,
+                (self.y - other_previous_pos.y - double_size_y) / delta_pos.y
             )
         
         return t_y

@@ -1,6 +1,7 @@
 import pygame
 
 from ...constants import UNIT
+from ...utils import Vec2
 
 
 class Camera:
@@ -9,10 +10,10 @@ class Camera:
     def __init__(self) -> None:
         """Constructeur."""
 
-        self.position: pygame.Vector2 = pygame.Vector2((0, 0))
+        self.position: Vec2 = Vec2.null
 
         self._target_surf: pygame.Surface = pygame.Surface((0, 0))
-        self._target_middle: pygame.Vector2 = pygame.Vector2()
+        self._target_middle: Vec2 = Vec2.null
     
     def begin_render(self, target_surf: pygame.Surface) -> None:
         """
@@ -20,7 +21,7 @@ class Camera:
         :param target_surf: La surface sur laquelle faire le rendu.
         """
         self._target_surf = target_surf
-        self._target_middle = pygame.Vector2(target_surf.get_size()) / 2.0
+        self._target_middle = Vec2.from_xy(target_surf.get_size()) / 2.0
     
     def end_render(self):
         """Terminer le rendu."""
@@ -30,7 +31,7 @@ class Camera:
     ############################################################################
     # MÉTHODES DE DESSIN
     
-    def draw_surface(self, center: pygame.Vector2, surface: pygame.Surface
+    def draw_surface(self, center: Vec2, surface: pygame.Surface
             ) -> None:
         """
         Dessiner une surface.
@@ -39,11 +40,11 @@ class Camera:
         """
         self._target_surf.blit(
             surface,
-            self._target_middle + UNIT*(center - self.position) - \
-                pygame.Vector2(surface.get_size()) / 2.0
+            pygame.Vector2((self._target_middle + UNIT*(center - self.position) - \
+                Vec2.from_xy(surface.get_size()) / 2.0).xy)
         )
     
-    def draw_circle(self, color: pygame.Color, center: pygame.Vector2,
+    def draw_circle(self, color: pygame.Color, center: Vec2,
             radius: float, width: int = 0) -> None:
         """
         Dessiner un cercle.
@@ -55,12 +56,13 @@ class Camera:
         """
         pygame.draw.circle(
             self._target_surf, color,
-            self._target_middle + UNIT*(center - self.position), radius,
+            (self._target_middle + UNIT*(center - self.position)).xy,
+            radius,
             width
         )
     
-    def draw_rect(self, color: pygame.Color, position: pygame.Vector2,
-            size: pygame.Vector2, width: int = 0) -> None:
+    def draw_rect(self, color: pygame.Color, position: Vec2,
+            size: Vec2, width: int = 0) -> None:
         """
         Dessiner un rectangle.
         :param color: La couleur du rectangle.
@@ -72,9 +74,9 @@ class Camera:
         pygame.draw.rect(
             self._target_surf, color,
             pygame.Rect(
-                self._target_middle + UNIT * (position - self.position) -
-                    size / 2.0,
-                size
+                (self._target_middle + UNIT * (position - self.position) -
+                    size / 2.0).xy,
+                size.xy
             ),
             width
         )

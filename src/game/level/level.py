@@ -3,6 +3,7 @@ import sys
 import pygame
 
 from ...constants import EPSILON, UNIT
+from ...utils import Vec2
 from ..managers import Time, Scene
 from .block import Block
 from .camera import Camera
@@ -10,7 +11,7 @@ from .entity import Player
 from .level_map import LevelMap
 
 
-CAMERA_OFFSET: pygame.Vector2 = pygame.Vector2(0, -2)
+CAMERA_OFFSET: Vec2 = Vec2(0, -2)
 
 
 class LevelScene(Scene):
@@ -25,7 +26,7 @@ class LevelScene(Scene):
 
         self.player: Player = Player()
         self.player.position = self.level_map.spawn_point + \
-            pygame.Vector2(0, -0.5)
+            Vec2(0, -0.5)
         self.camera: Camera = Camera()
         self.camera.position = self.player.position
     
@@ -51,7 +52,7 @@ class LevelScene(Scene):
             self.level_map.bottom_right.y
         )
     
-    def detect_player_collision(self, prev_position: pygame.Vector2) -> None:
+    def detect_player_collision(self, prev_position: Vec2) -> None:
         """
         Detection des collisions du joueur.
         :param prev_position: La position du joueur avant le mouvement.
@@ -66,7 +67,7 @@ class LevelScene(Scene):
                 # Récupérer le block
                 self.level_map.block_at(
                     # Calculer la position du block
-                    pygame.Vector2(position) + prev_position
+                    Vec2.from_xy(position) + prev_position
                 )
                 for position in [
                     # Position relative des blocks par rapport au joueur
@@ -107,7 +108,7 @@ class LevelScene(Scene):
                     y_t = min(new_y_t, y_t)
         
         delta_position = self.player.rect_collider.position - prev_position
-        resolve_vector = pygame.Vector2(
+        resolve_vector = Vec2(
             delta_position.x * x_t,
             delta_position.y * y_t
         )

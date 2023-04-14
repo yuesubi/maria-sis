@@ -1,6 +1,6 @@
 import pygame
 
-from ...utils import ClassGetter
+from ...utils import ClassGetter, Vec2
 
 
 class Input:
@@ -20,8 +20,8 @@ class Input:
     _buttons_down: set[int] = set()
 
     # Position de la souris
-    _mouse_position: pygame.Vector2 = pygame.Vector2(0, 0)
-    _delta_mouse_position: pygame.Vector2 = pygame.Vector2(0, 0)
+    _mouse_position: Vec2 = Vec2(0, 0)
+    _delta_mouse_position: Vec2 = Vec2(0, 0)
 
     # Savoir si l'application doit être quittée
     _is_quitting: bool = False
@@ -38,7 +38,7 @@ class Input:
         return cls._is_quitting
 
     @ClassGetter
-    def mouse_position(cls) -> pygame.Vector2:
+    def mouse_position(cls) -> Vec2:
         """
         Assesseur pour récupérer la position de la souris.
         :return: La position de la souris. 
@@ -46,7 +46,7 @@ class Input:
         return cls._mouse_position
 
     @ClassGetter
-    def delta_mouse_position(cls) -> pygame.Vector2:
+    def delta_mouse_position(cls) -> Vec2:
         """
         Assesseur pour récupérer la difference de position de la souris avec le
         dernier appel de la méthode actualiser.
@@ -131,7 +131,7 @@ class Input:
         cls._is_quitting = False
         
         # Calcul de la position de la souris
-        mouse_position = pygame.Vector2(pygame.mouse.get_pos())
+        mouse_position = Vec2.from_xy(pygame.mouse.get_pos())
         cls._delta_mouse_position = mouse_position - cls._mouse_position
         cls._mouse_position = mouse_position
 

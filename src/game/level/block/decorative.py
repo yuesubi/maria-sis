@@ -1,6 +1,7 @@
 import pygame
 
 from ....constants import UNIT
+from ....utils import Vec2
 from ...assets import OVER_WORLD_TILES
 from ..camera import Camera
 from ..collider import RectCollider
@@ -14,7 +15,7 @@ from .block import Block
 class DecorativeBlock(Block):
     """Classe d'un exemple de bloc décoratif."""
 
-    def __init__(self, position: pygame.Vector2) -> None:
+    def __init__(self, position: Vec2) -> None:
         """
         Constructeur.
         :param position: La position du bloc.
@@ -28,7 +29,7 @@ class DecorativeBlock(Block):
     
     @property
     def rect_collider(self) -> RectCollider:
-        return RectCollider(self.position.copy(), pygame.Vector2(1, 1))
+        return RectCollider(self.position.copy, Vec2(1, 1))
     
     def draw(self, camera: Camera) -> None:
         # Dessiner l'image du bloc
