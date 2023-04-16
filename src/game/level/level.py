@@ -25,8 +25,7 @@ class LevelScene(Scene):
         self.level_map = LevelMap.create_from_file(map_path)
 
         self.player: Player = Player()
-        self.player.position = self.level_map.spawn_point + \
-            Vec2(0, -0.5)
+        self.player.position = self.level_map.spawn_point + Vec2(0, -0.5)
         self.camera: Camera = Camera()
         self.camera.position = self.player.position
     
