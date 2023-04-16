@@ -2,7 +2,7 @@ import pygame
 from typing import Union
 
 from .....utils import Vec2
-from ...event_manager import EventManager
+from ....managers import Input
 from ..anchor import Anchor
 from ..fit import Fit
 from ..widget import Widget
@@ -50,16 +50,15 @@ class Button(Widget):
         self.command: Union[callable, None] = command
         self._rectangle: pygame.Rect = pygame.Rect(0, 0, 1, 1)
 
-    def process_events(self, event_manager: EventManager) -> None:
+    def update(self) -> None:
         # Vérifier si le bouton est cliqué
-        if event_manager.is_button_released(1):
+        if Input.is_button_released(1):
             # Vérifier si la sourie est sur le bouton
-            if self._rectangle.collidepoint(event_manager.mouse_pos):
+            if self._rectangle.collidepoint(Input.mouse_pos):
                 # Si il y a une fonction, l'appeler
                 if self.command is not None:
                     self.command()
         
-    def update(self, delta_time: float) -> None:
         # Mettre à jour le rectangle du bouton
         self._rectangle = pygame.Rect(
             self.global_position(Anchor.NW),

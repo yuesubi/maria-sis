@@ -22,7 +22,7 @@ class Text(Widget):
             font_color: pygame.Color,
             font_size: int,
             font_style: str = str(),
-            background_color: Union[pygame.Color, None] = None
+            background_color: pygame.Color | None = None
         ) -> None:
         """
         Constructeur d'un texte.
@@ -43,7 +43,7 @@ class Text(Widget):
         )
 
         self.font_color: pygame.Color = pygame.Color(font_color)
-        self.background_color: Union[pygame.Color, None] = background_color
+        self.background_color: pygame.Color | None = background_color
 
         self._text: str = str(text)
 
@@ -57,7 +57,7 @@ class Text(Widget):
 
         # Rendu du texte
         self._rendered_text: pygame.Surface = pygame.Surface((0, 0))
-        self._prerender_text()
+        self._pre_render_text()
     
     def change_text(self, text: str) -> None:
         """
@@ -65,12 +65,12 @@ class Text(Widget):
         :param text: Le nouveau texte.
         """
         self._text = text
-        self._prerender_text()
+        self._pre_render_text()
     
     def change_font(
             self,
             font_size: int,
-            font_style: Union[str, None] = None
+            font_style: str | None = None
         ) -> None:
         """
         Changer la police d'écriture du texte.
@@ -87,10 +87,10 @@ class Text(Widget):
             self._font_style, self._font_size
         )
 
-        self._prerender_text()
+        self._pre_render_text()
         
 
-    def _prerender_text(self) -> None:
+    def _pre_render_text(self) -> None:
         """Faire le rendu du texte pour quand il doit être affiché."""
         # Faire le rendu du texte
         self._rendered_text = self._font.render(
@@ -113,4 +113,4 @@ class Text(Widget):
             pygame.draw.rect(target, self.background_color, rectangle)
 
         # Afficher le texte
-        target.blit(self._rendered_text, global_position)
+        target.blit(self._rendered_text, global_position.xy)

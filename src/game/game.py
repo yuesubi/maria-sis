@@ -7,6 +7,7 @@ from typing import Any
 from ..constants import SCALE, UNIT
 from .level import LevelScene
 from .managers import Input, Scene, SceneId, Time
+from .scenes import MainMenuScene
 
 
 WIDTH, HEIGHT = 16, 13
@@ -44,6 +45,8 @@ class Game:
 
         if scene_id == SceneId.LEVEL:
             new_scene = LevelScene(*scene_args, **scene_kwargs)
+        elif scene_id == SceneId.MAIN_MENU:
+            new_scene = MainMenuScene(*scene_args, **scene_kwargs)
         else:
             raise BaseException(f"scene id {scene_id} is not valid")
         

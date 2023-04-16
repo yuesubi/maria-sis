@@ -1,4 +1,5 @@
 import pygame
+from typing import Union
 
 from ....utils import Vec2
 from .anchor import Anchor
@@ -30,8 +31,8 @@ class Widget:
         self._anchor: Anchor = Anchor(anchor)
         self._fit: Fit = Fit(fit)
 
-        self._position: Vec2 = Vec2.from_xy(position)
-        self._size: Vec2 = Vec2.from_xy(size)
+        self._position: Vec2 = position.copy
+        self._size: Vec2 = size.copy
     
     ############################################################################
     # Méthodes qui peuvent être surchargées par les héritiers
@@ -53,11 +54,11 @@ class Widget:
     # Assesseurs et modificateurs qui peuvent être surchargées par les héritiers
     
     @property
-    def parent(self) -> 'Widget' | None:
+    def parent(self) -> Union['Widget', None]:
         return self._parent
     
     @parent.setter
-    def parent(self, new_parent: 'Widget' | None) -> None:
+    def parent(self, new_parent: Union['Widget', None]) -> None:
         self._parent = new_parent
     
     @property
@@ -101,7 +102,7 @@ class Widget:
         :param part: La partie de l'élément dont on veut la position.
         :return: La position calculée.
         """
-        global_position = self.position + self.position(part)
+        global_position = self.position + self.position_of(part)
 
         # Si l'élément à un parent ajouter sa position globale
         if self.parent is not None:

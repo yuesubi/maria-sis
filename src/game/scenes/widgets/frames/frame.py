@@ -1,8 +1,6 @@
 import pygame
-from typing import Union
 
 from .....utils import Vec2
-from ...event_manager import EventManager
 from ..anchor import Anchor
 from ..fit import Fit
 from ..widget import Widget
@@ -17,8 +15,8 @@ class Frame(Widget):
             anchor: Anchor,
             size: Vec2,
             fit: Fit = Fit.NONE,
-            background_color: Union[pygame.Color, None] = None,
-            border_color: Union[pygame.Color, None] = None,
+            background_color: pygame.Color | None = None,
+            border_color: pygame.Color | None = None,
             border_width: int = 1,
             children: list[Widget] = list()
         ) -> None:
@@ -42,8 +40,8 @@ class Frame(Widget):
             size, fit
         )
 
-        self.background_color: Union[pygame.Color, None] = background_color
-        self.border_color: Union[pygame.Color, None] = border_color
+        self.background_color: pygame.Color | None = background_color
+        self.border_color: pygame.Color | None = border_color
         self.border_width: int = border_width
 
         self._children: list[Widget] = list(children)
@@ -68,12 +66,7 @@ class Frame(Widget):
         child.parent = None
         self._children.remove(child)
     
-    def process_events(self, event_manager: EventManager) -> None:
-        # Appeler la fonction sur tout les enfants
-        for child in self._children:
-            child.process_events(event_manager)
-    
-    def update(self, delta_time: float) -> None:
+    def update(self) -> None:
         for child in self._children:
             # Adapter la taille de l'enfant si besoin
             if child.fit == Fit.WIDTH or child.fit == Fit.BOTH:
@@ -82,13 +75,13 @@ class Frame(Widget):
                 child.size.y = self.size.y
 
             # Mettre à jour l'enfant
-            child.update(delta_time)
+            child.update()
     
     def render(self, target: pygame.Surface) -> None:
         # Le rectangle du cadre
         rectangle = pygame.Rect(
-            self.global_position(Anchor.NW),
-            self.size
+            self.global_position(Anchor.NW).xy,
+            self.size.xy
         )
 
         # Dessiner le fond du cadre

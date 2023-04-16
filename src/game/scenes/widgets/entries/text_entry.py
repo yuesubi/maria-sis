@@ -1,8 +1,7 @@
 import pygame
 
-from ...event_manager import EventManager
-
 from .....utils import Vec2
+from ....managers import Input, Time
 from ..anchor import Anchor
 from ..buttons import Button
 from ..fit import Fit
@@ -91,13 +90,13 @@ class TextEntry(Frame):
         """
         self.text.change_text(new_text)
     
-    def process_events(self, event_manager: EventManager) -> None:
-        super().process_events(event_manager)
+    def update(self) -> None:
+        super().update()
 
         # Si un click gauche est détecté
-        if event_manager.is_button_pressed(pygame.BUTTON_LEFT):
+        if Input.is_button_pressed(pygame.BUTTON_LEFT):
             # Calculer la position locale de la sourie
-            local_mouse_pos = (event_manager.mouse_pos -
+            local_mouse_pos = (Input.mouse_pos -
                 self.global_position(Anchor.NW))
 
             # Donner le focus si le click est sur le champ, sinon l'enlever
@@ -105,21 +104,18 @@ class TextEntry(Frame):
                 0 <= local_mouse_pos.y < self.size.y)
 
         # Détecter les touches appuyées
-        character_typed = event_manager.alpha_numeric
+        character_typed = Input.alpha_numeric
         if len(character_typed) > 0 and self._is_focused:
             self.text.change_text(self.text._text + character_typed)
         
         # Détecter si il faut supprimer des caractères
-        if (event_manager.is_key_pressed(pygame.K_BACKSPACE) and
+        if (Input.is_key_pressed(pygame.K_BACKSPACE) and
             len(self.text._text) > 0):
 
             self.text.change_text(self.text._text[:-1])
-    
-    def update(self, delta_time: float) -> None:
-        super().update(delta_time)
 
         # Faire avancer le temps
-        self._caret_time += delta_time
+        self._caret_time += Time.delta_time
     
     def render(self, target: pygame.Surface) -> None:
         super().render(target)
