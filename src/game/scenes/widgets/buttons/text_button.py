@@ -1,6 +1,7 @@
 import pygame
 from typing import Union
 
+from .....utils import Vec2
 from ..anchor import Anchor
 from ..fit import Fit
 from ..frames import Frame

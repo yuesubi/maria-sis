@@ -2,6 +2,7 @@ import pygame
 
 from ...event_manager import EventManager
 
+from .....utils import Vec2
 from ..anchor import Anchor
 from ..buttons import Button
 from ..fit import Fit

@@ -1,5 +1,6 @@
 import pygame
 
+from .....utils import Vec2
 from ..anchor import Anchor
 from ..fit import Fit
 from ..widget import Widget
