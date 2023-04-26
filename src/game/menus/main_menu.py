@@ -20,7 +20,7 @@ class MainMenuScene(Scene):
                 Text(
                     Vec2(0, 0), Anchor.C,
                     "Hello world!",
-                    pr.Color(0, 0, 0),
+                    pr.Color(0, 0, 0, 255),
                     font_size=20 
                 )
             ]

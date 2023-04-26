@@ -7,7 +7,7 @@ from typing import Any
 from ..constants import SCALE, UNIT
 from .level import LevelScene
 from .managers import Scene, SceneId, Time
-from .scenes import MainMenuScene
+from .menus import MainMenuScene
 
 
 WIDTH, HEIGHT = 16, 13
@@ -68,7 +68,7 @@ class Game:
 
             Scene.current_scene.render()
             pr.draw_fps(8, 8)
-            pr.draw_text(str(round(Time.fixed_fps)), 8, 24, 16, pr.WHITE)
+            pr.draw_text(str(round(Time.fixed_fps)) + " fixed fps", 8, 28, 20, pr.WHITE)
             
             pr.end_drawing()
             
