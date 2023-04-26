@@ -19,14 +19,15 @@ class Game:
     def __init__(self) -> None:
         """Constructeur."""
         pr.init_window(
-            WIDTH * UNIT * SCALE, HEIGHT * UNIT * SCALE,
+            int(WIDTH * UNIT * SCALE), int(HEIGHT * UNIT * SCALE),
             "Maria Sis"
         )
+        pr.set_trace_log_level(pr.TraceLogLevel.LOG_ERROR)
     
         Scene.set_create_scene_callback(self.create_scene)
         Scene.push_scene(SceneId.LEVEL)
         
-        Time.set_fixed_fps(40)
+        Time.set_fixed_fps(100)
     
     def create_scene(self, scene_id: SceneId, *scene_args: Any,
             **scene_kwargs: Any) -> Scene:
@@ -51,11 +52,10 @@ class Game:
     def run(self) -> None:
         """Faire tourner le jeu."""
 
+        pr.set_target_fps(Time.fixed_fps*2)
         time_bank: float = 0.0
         
-        while pr.window_should_close():
-            Input.update()
-
+        while not pr.window_should_close():
             Scene.current_scene.update()
             
             time_bank = min(0.2, time_bank + Time.delta_time)

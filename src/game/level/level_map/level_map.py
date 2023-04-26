@@ -8,6 +8,11 @@ from ..block import Block, DecorativeBlock
 from .chunk import Chunk
 
 
+def color_equal(color: pr.Color, other: pr.Color) -> bool:
+    return color.r == other.r and color.g == other.g and color.b == other.b \
+        and color.a == other.a
+
+
 def color_hash(color: pr.Color) -> int:
     return color.r * (255 ** 3) + color.g * (255 ** 2) + color.b * (255) +  \
         color.a
@@ -46,12 +51,12 @@ class LevelMap:
                     level_map._chunks[chunk_pos] = chunk
                 
                 # Ajout du block
-                color = pr.get_image_color()
+                color = pr.get_image_color(map_img, x, y)
                 block_type = BLOCK_OF_COLOR.get(color_hash(color))
                 if block_type is not None:
                     block = block_type(Vec2(x,y))
                     chunk[x % CHUNK_WIDTH, y % CHUNK_HEIGHT] = block
-                elif color == pr.Color(0, 255, 0, 0):
+                elif color_equal(color, pr.Color(0, 255, 0, 255)):
                     level_map.spawn_point = Vec2(x, y)
 
         return level_map

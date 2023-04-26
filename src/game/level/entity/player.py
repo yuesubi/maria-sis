@@ -1,9 +1,8 @@
 import pyray as pr
 
-from ....constants import EPSILON, PLAYER_SPEED, UNIT
 from ....utils import Vec2
 from ...assets import MARIA_FRAMES, MARIA_SPRITE_SHEET
-from ...managers import Input, Time
+from ...managers import Time
 from ..camera import Camera
 from ..collider import RectCollider
 from .entity import Entity
@@ -24,6 +23,7 @@ class Player(Entity):
             position=Vec2.null
         )
         self.velocity: Vec2 = Vec2.null
+        self.texture: pr.Texture = pr.load_texture(MARIA_SPRITE_SHEET)
     
     @property
     def rect_collider(self) -> RectCollider:
@@ -46,13 +46,13 @@ class Player(Entity):
         if pr.is_key_down(pr.KeyboardKey.KEY_LEFT):
             self.velocity.x = -4
         
-        if pr.is_key_down(pr.KeyboardKey.KEY_SPACE):
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_SPACE):
             self.velocity.y = -10
     
     def draw(self, camera: Camera) -> None:
         # Dessiner l'image du joueur
         camera.draw_texture_part(
-            MARIA_SPRITE_SHEET,
+            self.texture,
             self.position,
             MARIA_FRAMES[0]
         )
