@@ -1,5 +1,4 @@
-import pygame
-
+import pyray as pr
 from itertools import chain
 from typing import Iterator
 
@@ -9,8 +8,18 @@ from ..block import Block, DecorativeBlock
 from .chunk import Chunk
 
 
-BLOCK_OF_COLOR: dict[pygame.Color, type[Block]] = {
-    int(pygame.Color(0, 0, 0)): DecorativeBlock
+def color_equal(color: pr.Color, other: pr.Color) -> bool:
+    return color.r == other.r and color.g == other.g and color.b == other.b \
+        and color.a == other.a
+
+
+def color_hash(color: pr.Color) -> int:
+    return color.r * (255 ** 3) + color.g * (255 ** 2) + color.b * (255) +  \
+        color.a
+
+
+BLOCK_OF_COLOR: dict[pr.Color, type[Block]] = {
+    color_hash(pr.Color(0, 0, 0, 255)): DecorativeBlock
 }
 
 
@@ -27,12 +36,12 @@ class LevelMap:
         """
         level_map = cls()
 
-        map_img = pygame.image.load(img_path).convert()
+        map_img = pr.load_image(img_path)
         level_map.top_left.xy = 0, 0
-        level_map.bottom_right = Vec2.from_xy(map_img.get_size()) * UNIT
+        level_map.bottom_right = Vec2(map_img.width, map_img.height) * UNIT
 
-        for y in range(map_img.get_height()):
-            for x in range(map_img.get_width()):
+        for y in range(map_img.height):
+            for x in range(map_img.width):
                 chunk_pos = f"{x // CHUNK_WIDTH}x{y // CHUNK_HEIGHT}"
 
                 # Crée un chunk si il y en a pas
@@ -42,12 +51,12 @@ class LevelMap:
                     level_map._chunks[chunk_pos] = chunk
                 
                 # Ajout du block
-                color = map_img.get_at((x, y))
-                block_type = BLOCK_OF_COLOR.get(int(color))
+                color = pr.get_image_color(map_img, x, y)
+                block_type = BLOCK_OF_COLOR.get(color_hash(color))
                 if block_type is not None:
                     block = block_type(Vec2(x,y))
                     chunk[x % CHUNK_WIDTH, y % CHUNK_HEIGHT] = block
-                elif color == pygame.Color(0, 255, 0):
+                elif color_equal(color, pr.Color(0, 255, 0, 255)):
                     level_map.spawn_point = Vec2(x, y)
 
         return level_map

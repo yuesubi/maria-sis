@@ -1,8 +1,7 @@
-import pygame
+import pyray as pr
 
-from ....constants import UNIT
 from ....utils import Vec2
-from ...assets import OVER_WORLD_TILES
+from ...assets import OVER_WORLD_TILES, OVER_WORLD_TILE_SET
 from ..camera import Camera
 from ..collider import RectCollider
 from .block import Block
@@ -24,6 +23,7 @@ class DecorativeBlock(Block):
             position
         )
 
+        self.texture: pr.Texture = pr.load_texture(OVER_WORLD_TILE_SET)
         # TODO: Prendre en argument l'image du bloc et la stocker pour pouvoir
         # la dessiner
     
@@ -33,7 +33,8 @@ class DecorativeBlock(Block):
     
     def draw(self, camera: Camera) -> None:
         # Dessiner l'image du bloc
-        camera.draw_surface(
+        camera.draw_texture_part(
+            self.texture,
             self.position,
             OVER_WORLD_TILES[0]
         )

@@ -1,5 +1,3 @@
-import pygame
-
 from abc import ABC, abstractmethod, abstractproperty
 
 from ....utils import Vec2

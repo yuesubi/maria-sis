@@ -1,13 +1,13 @@
 """Jeu Maria Sis"""
 
-import pygame
+import pyray as pr
 
 from typing import Any
 
 from ..constants import SCALE, UNIT
 from .level import LevelScene
-from .managers import Input, Scene, SceneId, Time
-from .scenes import MainMenuScene
+from .managers import Scene, SceneId, Time
+from .menus import MainMenuScene
 
 
 WIDTH, HEIGHT = 16, 13
@@ -18,19 +18,16 @@ class Game:
 
     def __init__(self) -> None:
         """Constructeur."""
-        pygame.init()
-        pygame.font.init()
-        
-        self.window = pygame.display.set_mode((
-            WIDTH * UNIT * SCALE,
-            HEIGHT * UNIT * SCALE
-        ))
-        pygame.display.set_caption("Maria Sis")
+        pr.init_window(
+            int(WIDTH * UNIT * SCALE), int(HEIGHT * UNIT * SCALE),
+            "Maria Sis"
+        )
+        pr.set_trace_log_level(pr.TraceLogLevel.LOG_ERROR)
     
         Scene.set_create_scene_callback(self.create_scene)
-        Scene.push_scene(SceneId.LEVEL)
+        Scene.push_scene(SceneId.MAIN_MENU)
         
-        Time.set_fixed_fps(40)
+        Time.set_fixed_fps(100)
     
     def create_scene(self, scene_id: SceneId, *scene_args: Any,
             **scene_kwargs: Any) -> Scene:
@@ -55,18 +52,10 @@ class Game:
     def run(self) -> None:
         """Faire tourner le jeu."""
 
-        surf = pygame.Surface((WIDTH * UNIT, HEIGHT * UNIT))
-        font = pygame.font.SysFont("", 16)
-        
+        pr.set_target_fps(Time.fixed_fps*2)
         time_bank: float = 0.0
-
-        running = True
         
-        while running:
-            Input.update()
-            if Input.is_quitting == True:
-                running = False
-            
+        while not pr.window_should_close():
             Scene.current_scene.update()
             
             time_bank = min(0.2, time_bank + Time.delta_time)
@@ -74,13 +63,13 @@ class Game:
                 Scene.current_scene.fixed_update()
                 time_bank -= Time.fixed_delta_time
             
-            surf.fill((150, 150, 150))
-            Scene.current_scene.render_to(surf)
+            pr.begin_drawing()
+            pr.clear_background(pr.Color(150, 150, 150))
 
-            surf.blit(font.render(str(round(Time.fps)), False, (0, 255, 0)), (8, 8))
-            surf.blit(font.render(str(round(Time.fixed_fps)), False, (0, 255, 0)), (8, 24))
+            Scene.current_scene.render()
+            pr.draw_fps(8, 8)
+            pr.draw_text(str(round(Time.fixed_fps)) + " fixed fps", 8, 28, 20, pr.WHITE)
             
-            self.window.blit(pygame.transform.scale(surf, self.window.get_size()), (0, 0))
-            pygame.display.flip()
+            pr.end_drawing()
             
             Time.update()

@@ -1,11 +1,8 @@
 import os
-import sys
-import pygame
 
-from ...constants import EPSILON, UNIT
+from ...constants import EPSILON
 from ...utils import Vec2
 from ..managers import Time, Scene
-from .block import Block
 from .camera import Camera
 from .entity import Player
 from .level_map import LevelMap
@@ -124,8 +121,8 @@ class LevelScene(Scene):
     def update(self) -> None:
         self.player.update()
     
-    def render_to(self, target_surf: pygame.Surface) -> None:
-        self.camera.begin_render(target_surf)
+    def render(self) -> None:
+        self.camera.begin_render()
         for block in self.level_map.near_blocks(self.camera.position):
             block.draw(self.camera)
         self.player.draw(self.camera)

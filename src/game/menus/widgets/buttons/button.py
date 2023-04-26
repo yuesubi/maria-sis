@@ -1,8 +1,7 @@
-import pygame
+import pyray as pr
 from typing import Union
 
 from .....utils import Vec2
-from ....managers import Input
 from ..anchor import Anchor
 from ..fit import Fit
 from ..widget import Widget
@@ -17,8 +16,8 @@ class Button(Widget):
             anchor: Anchor,
             size: Vec2,
             fit: Fit = Fit.NONE,
-            background_color: Union[pygame.Color, None] = None,
-            border_color: Union[pygame.Color, None] = None,
+            background_color: Union[pr.Color, None] = None,
+            border_color: Union[pr.Color, None] = None,
             border_width: int = 1,
             command: Union[callable, None] = None
         ) -> None:
@@ -43,36 +42,39 @@ class Button(Widget):
             size, fit
         )
 
-        self.background_color: Union[pygame.Color, None] = background_color
-        self.border_color: Union[pygame.Color, None] = border_color
+        self.background_color: pr.Color | None = background_color
+        self.border_color: pr.Color | None = border_color
         self.border_width: int = border_width
         
-        self.command: Union[callable, None] = command
-        self._rectangle: pygame.Rect = pygame.Rect(0, 0, 1, 1)
+        self.command: callable | None = command
 
     def update(self) -> None:
         # Vérifier si le bouton est cliqué
-        if Input.is_button_released(1):
+        if pr.is_mouse_button_pressed(pr.MouseButton.MOUSE_BUTTON_LEFT):
             # Vérifier si la sourie est sur le bouton
-            if self._rectangle.collidepoint(Input.mouse_pos):
+            global_pos = self.global_position(Anchor.C)
+            mouse_pos = Vec2(pr.get_mouse_x(), pr.get_mouse_y())
+            if abs(global_pos.x - mouse_pos.x) < self.size.x / 2 and \
+                    abs(global_pos.y - mouse_pos.y) < self.size.y / 2:
                 # Si il y a une fonction, l'appeler
                 if self.command is not None:
                     self.command()
-        
-        # Mettre à jour le rectangle du bouton
-        self._rectangle = pygame.Rect(
-            self.global_position(Anchor.NW),
-            self.size
-        )
     
-    def render(self, target: pygame.Surface) -> None:
+    def render(self) -> None:
+        global_pos = self.global_position(Anchor.NW)
+
         # Dessiner le fond du bouton
         if self.background_color is not None:
-            pygame.draw.rect(target, self.background_color, self._rectangle)
+            pr.draw_rectangle(
+                global_pos.x, global_pos.y,
+                self.size.x, self.size.y,
+                self.background_color
+            )
         
         # Dessiner la bordure du bouton
         if self.border_color is not None:
-            pygame.draw.rect(
-                target, self.border_color,
-                self._rectangle, self.border_width
+            pr.draw_rectangle(
+                global_pos.x, global_pos.y,
+                self.size.x, self.size.y,
+                self.border_color
             )

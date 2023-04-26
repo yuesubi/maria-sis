@@ -1,4 +1,4 @@
-import pygame
+import pyray as pr
 from typing import Union
 
 from .....utils import Vec2
@@ -6,7 +6,6 @@ from ..anchor import Anchor
 from ..fit import Fit
 from ..frames import Frame
 from ..texts import Text
-from ..widget import Widget
 
 from .button import Button
 
@@ -21,11 +20,11 @@ class TextButton(Frame):
             size: Vec2,
             fit: Fit,
             text: str,
-            font_color: pygame.Color,
+            font_color: pr.Color,
             font_size: int,
             font_style: str = str(),
-            background_color: Union[pygame.Color, None] = None,
-            border_color: Union[pygame.Color, None] = None,
+            background_color: Union[pr.Color, None] = None,
+            border_color: Union[pr.Color, None] = None,
             border_width: int = 1,
             command: Union[callable, None] = None
         ) -> None:
