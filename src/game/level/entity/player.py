@@ -1,8 +1,8 @@
-import pygame
+import pyray as pr
 
 from ....constants import EPSILON, PLAYER_SPEED, UNIT
 from ....utils import Vec2
-from ...assets import MARIA_FRAMES
+from ...assets import MARIA_FRAMES, MARIA_SPRITE_SHEET
 from ...managers import Input, Time
 from ..camera import Camera
 from ..collider import RectCollider
@@ -24,11 +24,6 @@ class Player(Entity):
             position=Vec2.null
         )
         self.velocity: Vec2 = Vec2.null
-
-        # Masque pour les collisions
-        self._collision_mask: pygame.mask.Mask = pygame.mask.from_surface(
-            MARIA_FRAMES[0]
-        )
     
     @property
     def rect_collider(self) -> RectCollider:
@@ -46,31 +41,18 @@ class Player(Entity):
         self.position += self.velocity * Time.fixed_delta_time
 
     def update(self) -> None:
-        # Mettre la vélocité au vecteur nul
-        #self.velocity.update(0, 0)
-
-        # Si une flèche est appuyée modifier la vélocité
-        #if Input.is_key_down(pygame.K_DOWN):
-        #    self.velocity.y += 1
-        #if Input.is_key_down(pygame.K_UP):
-        #    self.velocity.y -= 1
-        if Input.is_key_down(pygame.K_RIGHT):
+        if pr.is_key_down(pr.KeyboardKey.KEY_RIGHT):
             self.velocity.x = 4
-        if Input.is_key_down(pygame.K_LEFT):
+        if pr.is_key_down(pr.KeyboardKey.KEY_LEFT):
             self.velocity.x = -4
         
-        if Input.is_key_pressed(pygame.K_SPACE):
+        if pr.is_key_down(pr.KeyboardKey.KEY_SPACE):
             self.velocity.y = -10
-        
-        # Si la vélocité n'est pas nulle
-        #if self.velocity.xy != (0, 0):
-            # Faire en sorte que le vecteur vélocité est une longueur de 1 (si
-            # on ne fait pas ça, se déplacer en diagonale est plus rapide que se
-            # déplacer sur les cotés)
-            #self.velocity.normalize_ip()
-        
-        #self.velocity *= PLAYER_SPEED
     
     def draw(self, camera: Camera) -> None:
         # Dessiner l'image du joueur
-        camera.draw_surface(self.position, MARIA_FRAMES[0])
+        camera.draw_texture_part(
+            MARIA_SPRITE_SHEET,
+            self.position,
+            MARIA_FRAMES[0]
+        )

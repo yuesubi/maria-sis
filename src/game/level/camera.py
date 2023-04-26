@@ -1,4 +1,4 @@
-import pygame
+import pyray as pr
 
 from ...constants import UNIT
 from ...utils import Vec2
@@ -12,16 +12,12 @@ class Camera:
 
         self.position: Vec2 = Vec2.null
 
-        self._target_surf: pygame.Surface = pygame.Surface((0, 0))
         self._target_middle: Vec2 = Vec2.null
     
-    def begin_render(self, target_surf: pygame.Surface) -> None:
-        """
-        Commencer le rendu.
-        :param target_surf: La surface sur laquelle faire le rendu.
-        """
-        self._target_surf = target_surf
-        self._target_middle = Vec2.from_xy(target_surf.get_size()) / 2.0
+    def begin_render(self) -> None:
+        """Commencer le rendu."""
+        self._target_middle = \
+            Vec2.from_xy(pr.get_screen_width, pr.get_screen_height()) / 2.0
     
     def end_render(self):
         """Terminer le rendu."""
@@ -30,21 +26,35 @@ class Camera:
     
     ############################################################################
     # MÉTHODES DE DESSIN
+
+    def draw_texture(self, texture: pr.Texture, center: Vec2) -> None: ...
+    def draw_texture_part(self, texture: pr.Texture, center: Vec2,
+            part: pr.Rectangle) -> None: ...
+    def draw_circle(self, center: Vec2, radius: float, color: pr.Color) -> None: ...
+    def draw_circle_lines(self, center: Vec2, radius: float, color: pr.Color
+            ) -> None: ...
+    def draw_rect(self, center: Vec2, dimensions: Vec2, color: pr.Color
+            ) -> None: ...
+    def draw_rect_lines(self, center: Vec2, dimensions: Vec2, color: pr.Color,
+            thickness: float) -> None: ...
     
-    def draw_surface(self, center: Vec2, surface: pygame.Surface
-            ) -> None:
+    def _draw_surface(self, center: Vec2, surface: pr.Texture) -> None:
         """
         Dessiner une surface.
         :param center: La position du centre du cercle.
         :param surface: La surface à dessiner.
         """
+        pr.draw_texture_pro(
+            surface, pr.Rectangle(0, 0, surface.width, surface.height),
+
+        )
         self._target_surf.blit(
             surface,
             (self._target_middle + UNIT*(center - self.position) - \
                 Vec2.from_xy(surface.get_size()) / 2.0).xy
         )
     
-    def draw_circle(self, color: pygame.Color, center: Vec2,
+    def _draw_circle(self, color: pygame.Color, center: Vec2,
             radius: float, width: int = 0) -> None:
         """
         Dessiner un cercle.
@@ -61,7 +71,7 @@ class Camera:
             width
         )
     
-    def draw_rect(self, color: pygame.Color, position: Vec2,
+    def _draw_rect(self, color: pygame.Color, position: Vec2,
             size: Vec2, width: int = 0) -> None:
         """
         Dessiner un rectangle.

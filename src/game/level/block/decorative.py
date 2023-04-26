@@ -1,8 +1,5 @@
-import pygame
-
-from ....constants import UNIT
 from ....utils import Vec2
-from ...assets import OVER_WORLD_TILES
+from ...assets import OVER_WORLD_TILES, OVER_WORLD_TILE_SET
 from ..camera import Camera
 from ..collider import RectCollider
 from .block import Block
@@ -33,7 +30,8 @@ class DecorativeBlock(Block):
     
     def draw(self, camera: Camera) -> None:
         # Dessiner l'image du bloc
-        camera.draw_surface(
+        camera.draw_texture_part(
+            OVER_WORLD_TILE_SET,
             self.position,
             OVER_WORLD_TILES[0]
         )
