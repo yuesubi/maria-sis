@@ -124,7 +124,7 @@ class LevelScene(Scene):
     def update(self) -> None:
         self.player.update()
     
-    def render_to(self, target_surf: pygame.Surface) -> None:
+    def render(self, target_surf: pygame.Surface) -> None:
         self.camera.begin_render(target_surf)
         for block in self.level_map.near_blocks(self.camera.position):
             block.draw(self.camera)

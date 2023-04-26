@@ -1,12 +1,12 @@
 """Jeu Maria Sis"""
 
-import pygame
+import pyray as pr
 
 from typing import Any
 
 from ..constants import SCALE, UNIT
 from .level import LevelScene
-from .managers import Input, Scene, SceneId, Time
+from .managers import Scene, SceneId, Time
 from .scenes import MainMenuScene
 
 
@@ -18,14 +18,10 @@ class Game:
 
     def __init__(self) -> None:
         """Constructeur."""
-        pygame.init()
-        pygame.font.init()
-        
-        self.window = pygame.display.set_mode((
-            WIDTH * UNIT * SCALE,
-            HEIGHT * UNIT * SCALE
-        ))
-        pygame.display.set_caption("Maria Sis")
+        pr.init_window(
+            WIDTH * UNIT * SCALE, HEIGHT * UNIT * SCALE,
+            "Maria Sis"
+        )
     
         Scene.set_create_scene_callback(self.create_scene)
         Scene.push_scene(SceneId.LEVEL)
@@ -55,18 +51,11 @@ class Game:
     def run(self) -> None:
         """Faire tourner le jeu."""
 
-        surf = pygame.Surface((WIDTH * UNIT, HEIGHT * UNIT))
-        font = pygame.font.SysFont("", 16)
-        
         time_bank: float = 0.0
-
-        running = True
         
-        while running:
+        while pr.window_should_close():
             Input.update()
-            if Input.is_quitting == True:
-                running = False
-            
+
             Scene.current_scene.update()
             
             time_bank = min(0.2, time_bank + Time.delta_time)
@@ -74,13 +63,13 @@ class Game:
                 Scene.current_scene.fixed_update()
                 time_bank -= Time.fixed_delta_time
             
-            surf.fill((150, 150, 150))
-            Scene.current_scene.render_to(surf)
+            pr.begin_drawing()
+            pr.clear_background(pr.Color(150, 150, 150))
 
-            surf.blit(font.render(str(round(Time.fps)), False, (0, 255, 0)), (8, 8))
-            surf.blit(font.render(str(round(Time.fixed_fps)), False, (0, 255, 0)), (8, 24))
+            Scene.current_scene.render()
+            pr.draw_fps(8, 8)
+            pr.draw_text(str(round(Time.fixed_fps)), 8, 24, 16, pr.WHITE)
             
-            self.window.blit(pygame.transform.scale(surf, self.window.get_size()), (0, 0))
-            pygame.display.flip()
+            pr.end_drawing()
             
             Time.update()

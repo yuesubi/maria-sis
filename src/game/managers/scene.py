@@ -1,6 +1,4 @@
 import enum
-import pygame
-
 from typing import Any, Protocol
 
 from ...utils import ClassGetter, Stack
@@ -106,12 +104,10 @@ class Scene:
         (Pour cela, il faut l'implémenter dans une sous classe)
         """
     
-    def render_to(self, target_surf: pygame.Surface) -> None:
+    def render(self) -> None:
         """
         Méthode appelée pour faire le rendu de la scène. (Doit être implémentée
         dans une sous classe)
-        :param target_surface: La surface sur laquelle faire le rendu de la
-            scène.
         """
     
     def quit(self) -> None:

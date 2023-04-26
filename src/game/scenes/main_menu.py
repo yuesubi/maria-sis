@@ -29,6 +29,6 @@ class MainMenuScene(Scene):
     def update(self) -> None:
         self.main_frame.update()
 
-    def render_to(self, target_surf: pygame.Surface) -> None:
+    def render(self, target_surf: pygame.Surface) -> None:
         self.main_frame.size.xy = target_surf.get_size()
         self.main_frame.render(target_surf)

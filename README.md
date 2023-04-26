@@ -65,8 +65,9 @@ python maria-sis.py
     image.
 * 2023/03/23 0h10 Ajout d'un point d'apparition sur la carte.
 * 2023/03/23 0h30 Ajout de la détection de collision.
-* 2023/03/23 0h30 Ajout d'images dans le jeu pour Maria et DecorativeBlock
-* 2023/03/23 0h10 Petits changements
-* 2023/03/29 2h00 Ajout des collisions
-* 2023/04/02 3h00 Correction des bugs des collisions
-* 2023/04/02 0h45 Création d'une classe de vecteur 2D
+* 2023/03/23 0h30 Ajout d'images dans le jeu pour Maria et DecorativeBlock.
+* 2023/03/23 0h10 Petits changements.
+* 2023/03/29 2h00 Ajout des collisions.
+* 2023/04/02 3h00 Correction des bugs des collisions.
+* 2023/04/12 1h00 Création d'une classe de vecteur 2D.
+* 2023/04/16 0h30 Ajout du menu principal et des widgets.
