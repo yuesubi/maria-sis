@@ -1,4 +1,5 @@
-import pygame
+import pyray as pr
+from typing import Union
 
 from .....utils import Vec2
 from ..anchor import Anchor
@@ -15,8 +16,8 @@ class Frame(Widget):
             anchor: Anchor,
             size: Vec2,
             fit: Fit = Fit.NONE,
-            background_color: pygame.Color | None = None,
-            border_color: pygame.Color | None = None,
+            background_color: Union[pr.Color, None] = None,
+            border_color: Union[pr.Color, None] = None,
             border_width: int = 1,
             children: list[Widget] = list()
         ) -> None:
@@ -40,8 +41,8 @@ class Frame(Widget):
             size, fit
         )
 
-        self.background_color: pygame.Color | None = background_color
-        self.border_color: pygame.Color | None = border_color
+        self.background_color: pr.Color | None = background_color
+        self.border_color: pr.Color | None = border_color
         self.border_width: int = border_width
 
         self._children: list[Widget] = list(children)
@@ -77,24 +78,29 @@ class Frame(Widget):
             # Mettre à jour l'enfant
             child.update()
     
-    def render(self, target: pygame.Surface) -> None:
+    def render(self) -> None:
         # Le rectangle du cadre
-        rectangle = pygame.Rect(
-            self.global_position(Anchor.NW).xy,
-            self.size.xy
-        )
+        global_pos = self.global_position(Anchor.NW).xy,
 
         # Dessiner le fond du cadre
         if self.background_color is not None:
-            pygame.draw.rect(target, self.background_color, rectangle)
+            pr.draw_rectangle(
+                global_pos.x, global_pos.y,
+                self.size.x, self.size.y,
+                self.background_color
+            )
         
         # Dessiner la bordure du cadre
         if self.border_color is not None:
-            pygame.draw.rect(
-                target, self.border_color,
-                rectangle, self.border_width
+            pr.draw_rectangle_lines_ex(
+                pr.Rectangle(
+                    global_pos.x, global_pos.y,
+                    self.size.x, self.size.y
+                ),
+                self.border_width,
+                self.border_color
             )
 
         # Appeler la fonction sur tout les enfants
         for child in self._children:
-            child.render(target)
+            child.render()

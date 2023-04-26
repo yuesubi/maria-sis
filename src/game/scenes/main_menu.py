@@ -1,6 +1,6 @@
 """La scène principale du jeu."""
 
-import pygame
+import pyray as pr
 
 from ...utils import Vec2
 from ..managers import Scene
@@ -20,7 +20,7 @@ class MainMenuScene(Scene):
                 Text(
                     Vec2(0, 0), Anchor.C,
                     "Hello world!",
-                    pygame.Color(0, 0, 0),
+                    pr.Color(0, 0, 0),
                     font_size=20 
                 )
             ]
@@ -29,6 +29,6 @@ class MainMenuScene(Scene):
     def update(self) -> None:
         self.main_frame.update()
 
-    def render(self, target_surf: pygame.Surface) -> None:
-        self.main_frame.size.xy = target_surf.get_size()
-        self.main_frame.render(target_surf)
+    def render(self) -> None:
+        self.main_frame.size.xy = pr.get_screen_width(), pr.get_screen_height()
+        self.main_frame.render()

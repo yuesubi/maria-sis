@@ -1,4 +1,3 @@
-import pygame
 from typing import Union
 
 from ....utils import Vec2
@@ -43,11 +42,10 @@ class Widget:
         la méthode si besoin.
         """
     
-    def render(self, target: pygame.Surface) -> None:
+    def render(self) -> None:
         """
         Faire le rendu de l'élément. Chaque héritier de cette classe peut
         surcharger la méthode si besoin.
-        :param target: La surface sur laquelle faire le rendu.
         """
     
     ############################################################################

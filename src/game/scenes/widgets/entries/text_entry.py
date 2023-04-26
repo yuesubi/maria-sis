@@ -1,7 +1,8 @@
-import pygame
+import pyray as pr
+from typing import Union
 
 from .....utils import Vec2
-from ....managers import Input, Time
+from ....managers import Time
 from ..anchor import Anchor
 from ..buttons import Button
 from ..fit import Fit
@@ -19,11 +20,11 @@ class TextEntry(Frame):
             anchor: Anchor,
             size: Vec2,
             fit: Fit,
-            font_color: pygame.Color,
+            font_color: pr.Color,
             font_size: int,
             font_style: str = str(),
-            background_color: pygame.Color | None = None,
-            border_color: pygame.Color | None = None,
+            background_color: Union[pr.Color, None] = None,
+            border_color: Union[pr.Color, None] = None,
             border_width: int = 1,
         ) -> None:
         """
@@ -43,7 +44,7 @@ class TextEntry(Frame):
         """
 
         # Texte qui contient ce qui à été écrit
-        self.text = Text(
+        self._text = Text(
             Vec2(0, 0), Anchor.C,
             str(),
             font_color, font_size, font_style
@@ -61,7 +62,7 @@ class TextEntry(Frame):
                     border_color, border_width,
                     command=self.focus
                 ),
-                self.text
+                self._text
             ]
         )
 
@@ -76,51 +77,55 @@ class TextEntry(Frame):
         """Faire en sorte que l'on puisse tapper du texte."""
         self._is_focused = True
     
-    def get_text(self) -> str:
+    @property
+    def text(self) -> str:
         """
         Récupérer le texte du champ de texte.
         :return: Le texte.
         """
-        return self.text._text
+        return self._text.text
     
-    def set_text(self, new_text) -> None:
+    @text.setter
+    def text(self, new_text) -> None:
         """
         Changer le texte du champ de texte.
         :param new_text: Le nouveau texte.
         """
-        self.text.change_text(new_text)
+        self._text.text = new_text
     
     def update(self) -> None:
         super().update()
 
         # Si un click gauche est détecté
-        if Input.is_button_pressed(pygame.BUTTON_LEFT):
+        if pr.is_mouse_button_pressed(pr.MouseButton.MOUSE_BUTTON_LEFT):
             # Calculer la position locale de la sourie
-            local_mouse_pos = (Input.mouse_pos -
-                self.global_position(Anchor.NW))
+            local_mouse_pos = Vec2(pr.get_mouse_x(), pr.get_mouse_y()) - \
+                self.global_position(Anchor.NW)
 
             # Donner le focus si le click est sur le champ, sinon l'enlever
             self._is_focused = (0 <= local_mouse_pos.x < self.size.x and
                 0 <= local_mouse_pos.y < self.size.y)
 
         # Détecter les touches appuyées
-        character_typed = Input.alpha_numeric
-        if len(character_typed) > 0 and self._is_focused:
-            self.text.change_text(self.text._text + character_typed)
+        character_typed = chr(pr.get_char_pressed())
+        if character_typed and self._is_focused:
+            self._text.text += character_typed
         
         # Détecter si il faut supprimer des caractères
-        if (Input.is_key_pressed(pygame.K_BACKSPACE) and
-            len(self.text._text) > 0):
-
-            self.text.change_text(self.text._text[:-1])
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_BACKSPACE) and \
+                len(self._text.text) > 0:
+            self._text.text = self._text.text[:-1]
 
         # Faire avancer le temps
         self._caret_time += Time.delta_time
     
-    def render(self, target: pygame.Surface) -> None:
-        super().render(target)
+    def render(self) -> None:
+        super().render()
 
-        caret_rect = pygame.Rect(self.text.global_position(Anchor.NE),
-            Vec2(2, self.text.size.y))
+        global_pos = self._text.global_position(Anchor.NE)
         if int(self._caret_time * 2) % 2 == 0 and self._is_focused:
-            pygame.draw.rect(target, self.text.font_color, caret_rect)
+            pr.draw_rectangle(
+                global_pos.x, global_pos.y,
+                2, self._text.size.y,
+                self._text.font_color
+            )

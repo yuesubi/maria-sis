@@ -1,14 +1,10 @@
-import pygame
+import pyray as pr
+from typing import Union
 
 from .....utils import Vec2
 from ..anchor import Anchor
 from ..fit import Fit
 from ..widget import Widget
-
-
-# Initialiser le module de texte de pygame
-if not pygame.font.get_init():
-    pygame.font.init()
 
 
 class Text(Widget):
@@ -19,10 +15,10 @@ class Text(Widget):
             position: Vec2,
             anchor: Anchor,
             text: str,
-            font_color: pygame.Color,
+            font_color: pr.Color,
             font_size: int,
             font_style: str = str(),
-            background_color: pygame.Color | None = None
+            background_color: Union[pr.Color, None] = None
         ) -> None:
         """
         Constructeur d'un texte.
@@ -42,75 +38,37 @@ class Text(Widget):
             Vec2(1, 1), Fit.NONE
         )
 
-        self.font_color: pygame.Color = pygame.Color(font_color)
-        self.background_color: pygame.Color | None = background_color
+        self.font_color: pr.Color = font_color
+        self.background_color: pr.Color | None = background_color
 
-        self._text: str = str(text)
+        self.text: str = str(text)
 
-        self._font_size: int = int(font_size)
-        self._font_style: int = str(font_style)
+        self.font_size: int = int(font_size)
+        self.font_style: int = str(font_style)
 
-        # Création d'une police
-        self._font: pygame.font.Font = pygame.font.SysFont(
-            self._font_style, self._font_size
-        )
-
-        # Rendu du texte
-        self._rendered_text: pygame.Surface = pygame.Surface((0, 0))
-        self._pre_render_text()
-    
-    def change_text(self, text: str) -> None:
-        """
-        Changer le contenu du texte.
-        :param text: Le nouveau texte.
-        """
-        self._text = text
-        self._pre_render_text()
-    
-    def change_font(
-            self,
-            font_size: int,
-            font_style: str | None = None
-        ) -> None:
-        """
-        Changer la police d'écriture du texte.
-        :param font_size: La taille de la police.
-        :param font_style: Le style de la police.
-        """
-        self._font_size = font_size
-
-        # Changer le style si spécifié
-        if font_style is not None:
-            self._font_style = font_style
-        
-        self._font: pygame.font.Font = pygame.font.SysFont(
-            self._font_style, self._font_size
-        )
-
-        self._pre_render_text()
-        
-
-    def _pre_render_text(self) -> None:
-        """Faire le rendu du texte pour quand il doit être affiché."""
-        # Faire le rendu du texte
-        self._rendered_text = self._font.render(
-            self._text, True, self.font_color
-        )
-
+    def update(self) -> None:
         # Calculer la taille du texte
         self.size = Vec2(
-            self._rendered_text.get_width(),
-            self._rendered_text.get_height()
+            pr.measure_text(self.text, self.font_size),
+            self.font_size
         )
     
-    def render(self, target: pygame.Surface) -> None:
+    def render(self) -> None:
         # Récupérer la position du texte
         global_position = self.global_position(Anchor.NW)
 
         # Dessiner le fond du texte
         if self.background_color is not None:
-            rectangle = pygame.Rect(global_position, self.size)
-            pygame.draw.rect(target, self.background_color, rectangle)
+            pr.draw_rectangle(
+                global_position.x, global_position.y,
+                self.size.x, self.size.y,
+                self.background_color
+            )
 
         # Afficher le texte
-        target.blit(self._rendered_text, global_position.xy)
+        pr.draw_text(
+            self.text,
+            int(global_position.x), int(global_position.y),
+            self.font_size,
+            self.font_color
+        )

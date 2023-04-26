@@ -25,7 +25,7 @@ class Game:
         pr.set_trace_log_level(pr.TraceLogLevel.LOG_ERROR)
     
         Scene.set_create_scene_callback(self.create_scene)
-        Scene.push_scene(SceneId.LEVEL)
+        Scene.push_scene(SceneId.MAIN_MENU)
         
         Time.set_fixed_fps(100)
     
