@@ -2,15 +2,21 @@
 
 import pyray as pr
 
-from typing import Any
+from typing import Any, cast
 
 from ..constants import SCALE, UNIT
 from .level import LevelScene
-from .managers import Scene, SceneId, Time
+from .managers import CreateSceneCallBack, Scene, SceneId, Time
 from .menus import MainMenuScene
 
 
 WIDTH, HEIGHT = 16, 13
+
+
+SCENE_MAP: dict[SceneId, type[Scene]] = {
+    SceneId.LEVEL: LevelScene,
+    SceneId.MAIN_MENU: MainMenuScene,
+}
 
 
 class Game:
@@ -24,7 +30,9 @@ class Game:
         )
         pr.set_trace_log_level(pr.TraceLogLevel.LOG_ERROR)
     
-        Scene.set_create_scene_callback(self.create_scene)
+        Scene.set_create_scene_callback(
+            cast(CreateSceneCallBack, self.create_scene)
+        )
         Scene.push_scene(SceneId.MAIN_MENU)
         
         Time.set_fixed_fps(100)
@@ -38,16 +46,7 @@ class Game:
         :param *scene_kwargs: Les argument clés à donner au constructeur de la
             scène.
         """
-        new_scene = None
-
-        if scene_id == SceneId.LEVEL:
-            new_scene = LevelScene(*scene_args, **scene_kwargs)
-        elif scene_id == SceneId.MAIN_MENU:
-            new_scene = MainMenuScene(*scene_args, **scene_kwargs)
-        else:
-            raise BaseException(f"scene id {scene_id} is not valid")
-        
-        return new_scene
+        return SCENE_MAP[SceneId(scene_id)](*scene_args, **scene_kwargs)
 
     def run(self) -> None:
         """Faire tourner le jeu."""

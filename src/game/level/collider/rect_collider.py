@@ -1,4 +1,3 @@
-from ....constants import EPSILON
 from ....utils import Vec2
 
 

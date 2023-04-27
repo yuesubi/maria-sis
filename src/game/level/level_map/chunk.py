@@ -44,4 +44,4 @@ class Chunk:
         Récupérer tous les blocks.
         :return: Les blocks et leurs coordonnées.
         """
-        return filter(lambda block: block is not None, self._blocks)
+        return (block for block in self._blocks if block is not None)

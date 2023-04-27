@@ -1,5 +1,5 @@
 import pyray as pr
-from typing import Union
+from typing import Callable, Union
 
 from .....utils import Vec2
 from ..anchor import Anchor
@@ -19,7 +19,7 @@ class Button(Widget):
             background_color: Union[pr.Color, None] = None,
             border_color: Union[pr.Color, None] = None,
             border_width: int = 1,
-            command: Union[callable, None] = None
+            command: Union[Callable[[], None], None] = None
         ) -> None:
         """
         Constructeur d'un bouton.
@@ -46,7 +46,7 @@ class Button(Widget):
         self.border_color: pr.Color | None = border_color
         self.border_width: int = border_width
         
-        self.command: callable | None = command
+        self.command: Callable[[], None] | None = command
 
     def update(self) -> None:
         # Vérifier si le bouton est cliqué

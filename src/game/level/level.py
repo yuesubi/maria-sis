@@ -56,10 +56,8 @@ class LevelScene(Scene):
 
         # Trouver les blocks à vérifier (il y a besoin de vérifier que les
         # blocks autour du joueur)
-        blocks_to_check = filter(
-            # Seulement les blocks non None
-            lambda block: block is not None,
-            [
+        blocks_to_check = (
+            block for block in (
                 # Récupérer le block
                 self.level_map.block_at(
                     # Calculer la position du block
@@ -71,7 +69,9 @@ class LevelScene(Scene):
                     (0, -1), (1, 0), (0, 1), (1, 0),
                     (0, 0)
                 ]
-            ]
+            )
+            # Seulement les blocks non None
+            if block is not None
         )
 
         # Part du mouvement effectué à conserver pour chaque axe
