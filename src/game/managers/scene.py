@@ -79,7 +79,7 @@ class Scene:
             scène.
         """
         cls.pop_scene()
-        cls.push_scene(new_scene_id, scene_args, scene_kwargs)
+        cls.push_scene(new_scene_id, *scene_args, **scene_kwargs)
     
     @ClassGetter
     def current_scene(cls) -> 'Scene':

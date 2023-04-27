@@ -66,15 +66,18 @@ class Button(Widget):
         # Dessiner le fond du bouton
         if self.background_color is not None:
             pr.draw_rectangle(
-                global_pos.x, global_pos.y,
-                self.size.x, self.size.y,
+                int(global_pos.x), int(global_pos.y),
+                int(self.size.x), int(self.size.y),
                 self.background_color
             )
         
         # Dessiner la bordure du bouton
         if self.border_color is not None:
-            pr.draw_rectangle(
-                global_pos.x, global_pos.y,
-                self.size.x, self.size.y,
+            pr.draw_rectangle_lines_ex(
+                pr.Rectangle(
+                    global_pos.x, global_pos.y,
+                    self.size.x, self.size.y,
+                ),
+                self.border_width,
                 self.border_color
             )
