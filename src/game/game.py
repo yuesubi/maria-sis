@@ -18,6 +18,8 @@ SCENE_MAP: dict[SceneId, type[Scene]] = {
     SceneId.HOST_CLIENT_MENU: HostClientMenuScene,
     SceneId.LEVEL: LevelScene,
     SceneId.MAIN_MENU: MainMenuScene,
+    SceneId.SCAN_MENU: ScanMenuScene,
+    SceneId.WAIT_MENU: WaitMenuScene,
 }
 
 

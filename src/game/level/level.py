@@ -29,6 +29,9 @@ class LevelScene(Scene):
     def fixed_update(self) -> None:
         prev_position = self.player.rect_collider.position
         self.player.fixed_update()
+        
+        if self.player.position.y > 20:
+            self.player.position.y = 0
 
         self.detect_player_collision(prev_position)
 
