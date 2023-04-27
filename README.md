@@ -71,3 +71,5 @@ python maria-sis.py
 * 2023/04/02 3h00 Correction des bugs des collisions.
 * 2023/04/12 1h00 Création d'une classe de vecteur 2D.
 * 2023/04/16 0h30 Ajout du menu principal et des widgets.
+* 2023/04/26 1h00 Passage de toutes le utilisation de pygame à pyray.
+* 2023/04/27 0h30 Correction des erreurs de typage.

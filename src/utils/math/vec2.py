@@ -64,20 +64,20 @@ class Vec2:
     ############################################################################
     # FONCTIONNEMENT DE L'OBJET
     
-    def __get__(self, _instance: 'Vec2', _owner: Any) -> 'Vec2':
-        """Quand on récupère le Vec2 on reçois une copie."""
-        return self.copy
-    
     def __repr__(self) -> str:
         return f"Vec2<{self.x},{self.y}>"
     
     ############################################################################
     # COMPARAISONS
 
-    def __eq__(self, other: 'Vec2') -> bool:
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Vec2):
+            return NotImplemented
         return self.x == other.x and self.y == other.y
 
-    def __ne__(self, other: 'Vec2') -> bool:
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Vec2):
+            return NotImplemented
         return not self == other
     
     ############################################################################
@@ -195,11 +195,21 @@ class Vec2:
     def xy(self) -> tuple[float, float]:
         """Le tuple (x, y)."""
         return self.x, self.y
+    
+    @xy.setter
+    def xy(self, xy: tuple[float, float]) -> None:
+        """Remplacer les cordonnées par xy."""
+        self.x, self.y = xy
 
     @property
     def yx(self) -> tuple[float, float]:
         """Le tuple (y, x)."""
         return self.y, self.x
+    
+    @yx.setter
+    def yx(self, yx: tuple[float, float]) -> None:
+        """Remplacer les cordonnées par yx."""
+        self.y, self.x = yx
     
     @property
     def xx(self) -> tuple[float, float]:
@@ -210,13 +220,3 @@ class Vec2:
     def yy(self) -> tuple[float, float]:
         """Le tuple (y, y)."""
         return self.y, self.y
-    
-    @xy.setter
-    def xy(self, xy: tuple[float, float]) -> None:
-        """Remplacer les cordonnées par xy."""
-        self.x, self.y = xy
-
-    @yx.setter
-    def yx(self, yx: tuple[float, float]) -> None:
-        """Remplacer les cordonnées par yx."""
-        self.y, self.x = yx

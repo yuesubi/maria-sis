@@ -1,5 +1,5 @@
 import pyray as pr
-from typing import Union
+from typing import Callable, Union
 
 from .....utils import Vec2
 from ..anchor import Anchor
@@ -26,7 +26,7 @@ class TextButton(Frame):
             background_color: Union[pr.Color, None] = None,
             border_color: Union[pr.Color, None] = None,
             border_width: int = 1,
-            command: Union[callable, None] = None
+            command: Union[Callable[[], None], None] = None
         ) -> None:
         """
         Constructeur d'un bouton.

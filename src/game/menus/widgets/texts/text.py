@@ -44,7 +44,7 @@ class Text(Widget):
         self.text: str = str(text)
 
         self.font_size: int = int(font_size)
-        self.font_style: int = str(font_style)
+        self.font_style: str = str(font_style)
 
     def update(self) -> None:
         # Calculer la taille du texte

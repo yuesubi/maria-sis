@@ -80,7 +80,7 @@ class Frame(Widget):
     
     def render(self) -> None:
         # Le rectangle du cadre
-        global_pos = self.global_position(Anchor.NW).xy,
+        global_pos = self.global_position(Anchor.NW)
 
         # Dessiner le fond du cadre
         if self.background_color is not None:
