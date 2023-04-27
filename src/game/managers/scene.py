@@ -7,6 +7,8 @@ from ...utils import ClassGetter, Stack
 class SceneId(enum.Enum):
     LEVEL: int = 0
     MAIN_MENU: int = 1
+    HOST_CLIENT_MENU: int  = 2
+    CONNECT_METHOD_MENU: int  = 3
 
 
 class CreateSceneCallBack(Protocol):

@@ -7,13 +7,15 @@ from typing import Any, cast
 from ..constants import SCALE, UNIT
 from .level import LevelScene
 from .managers import CreateSceneCallBack, Scene, SceneId, Time
-from .menus import MainMenuScene
+from .menus import *
 
 
 WIDTH, HEIGHT = 16, 13
 
 
 SCENE_MAP: dict[SceneId, type[Scene]] = {
+    SceneId.CONNECT_METHOD_MENU: ConnectMethodMenuScene,
+    SceneId.HOST_CLIENT_MENU: HostClientMenuScene,
     SceneId.LEVEL: LevelScene,
     SceneId.MAIN_MENU: MainMenuScene,
 }
