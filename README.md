@@ -9,8 +9,8 @@ Voir [CONTRIBUTING.md](/CONTRIBUTING.md)
 ## Lancement
 
 ### Dépendances
-Pour exécuter le jeu il faut avoir `python` (**une version assez récente**) et
-`raylib` d'installé (`pip install raylib`).
+Pour exécuter le jeu il faut avoir `python` (**une version assez récente**),
+`raylib` (`pip install raylib`) et `netifaces` (`pip install netifaces2`).
 
 ### Cloner le repo
 Téléchargez le [zip](https://github.com/yuesubi/maria-sis/archive/refs/heads/main.zip)
@@ -33,6 +33,29 @@ python maria-sis.py
 
 ### Classes
 ![Schéma des classes](/res/schemas/classes.svg)
+
+
+## A faire
+
+- [ ] Créer des ennemis :
+    * Les ennemis sont des `Entity` (ie: ils hérite de cette classe)
+        * La classe des ennemis doit avoir :
+            - Une méthode `def update(self) -> None: ...`. Les entrées doivent
+                être gérées dans cette méthode. Pour consulter les entrées de
+                l'utilisateur il faut utiliser `pyray`. (voir
+                `/src/game/level/entity/player.py:43` pour un exemple)
+            - Une méthode `def fixed_update(self) -> None: ...`. Tout les
+                mouvements doivent êtres faits dedans. Chaque quantité de
+                mouvement doit être multipliée par `Time.fixed_delta_time`.
+                (voir `/src/game/level/entity/player.py:36` pour un exemple)
+            - Une méthode `def draw(self, camera: Camera) -> None: ...` pour le
+                rendu à l'écran. Il faut utiliser la camera passée en paramètre
+                pour le rendu. (voir `/src/game/level/entity/player.py:52` pour
+                un exemple et `/src/game/level/camera.py` pour les méthodes de
+                rendu disponibles)
+        * La classe des ennemis peut utiliser `self.position` qui est hérité de
+            `Entity` pas besoin de le définir soi-même. 
+    *
 
 
 ## Progression

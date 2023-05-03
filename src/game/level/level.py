@@ -4,7 +4,7 @@ from ...constants import EPSILON
 from ...utils import Vec2
 from ..managers import Time, Scene
 from .camera import Camera
-from .entity import Player
+from .entity import Entity, Player
 from .level_map import LevelMap
 
 
@@ -23,6 +23,9 @@ class LevelScene(Scene):
 
         self.player: Player = Player()
         self.player.position = self.level_map.spawn_point + Vec2(0, -0.5)
+
+        self.entities: list[Entity] = list()
+        
         self.camera: Camera = Camera()
         self.camera.position = self.player.position
     
@@ -34,6 +37,9 @@ class LevelScene(Scene):
             self.player.position.y = 0
 
         self.detect_player_collision(prev_position)
+
+        for entity in self.entities:
+            entity.fixed_update()
 
         self.camera.position = self.camera.position.lerp(
             self.player.position + CAMERA_OFFSET,
@@ -123,10 +129,19 @@ class LevelScene(Scene):
 
     def update(self) -> None:
         self.player.update()
+
+        for entity in self.entities:
+            entity.update(self.camera)
     
     def render(self) -> None:
         self.camera.begin_render()
+        
         for block in self.level_map.near_blocks(self.camera.position):
             block.draw(self.camera)
+            
         self.player.draw(self.camera)
+        
+        for entity in self.entities:
+            entity.draw(self.camera)
+            
         self.camera.end_render()
