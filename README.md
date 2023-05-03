@@ -39,7 +39,7 @@ python maria-sis.py
 
 - [ ] Créer des ennemis :
     * Les ennemis sont des `Entity` (ie: ils hérite de cette classe)
-        * La classe des ennemis doit avoir :
+        * La classe d'un ennemi doit avoir :
             - Une méthode `def update(self) -> None: ...`. Les entrées doivent
                 être gérées dans cette méthode. Pour consulter les entrées de
                 l'utilisateur il faut utiliser `pyray`. (voir
@@ -53,9 +53,10 @@ python maria-sis.py
                 pour le rendu. (voir `/src/game/level/entity/player.py:52` pour
                 un exemple et `/src/game/level/camera.py` pour les méthodes de
                 rendu disponibles)
-        * La classe des ennemis peut utiliser `self.position` qui est hérité de
+        * La classe d'un ennemi peut utiliser `self.position` qui est hérité de
             `Entity` pas besoin de le définir soi-même. 
-    *
+    * Pour tester une entité, il faut ajouter une instance de l'ennemi dans la
+        liste `self.entities` dans `LevelScene.__init__()`
 
 
 ## Progression
