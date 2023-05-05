@@ -35,6 +35,28 @@ python maria-sis.py
 ![Schéma des classes](/res/schemas/classes.svg)
 
 
+## Networking
+
+### Communication pour scanner
+TCP/IP communication
+- `server` : addr `(ip, port_a)`, thread `scan_answer`
+- `client` : thread `scan/try_connect`
+```txt
+server    client
+|  connection  |
+|<|=========== |
+|              | /___
+|              | \   \
+| demande info |      |
+|<------------ |      |
+|     info     |      |
+| ------------>|      |
+|              | ____/
+|              |
+V              V
+```
+
+
 ## A faire
 
 - [ ] Créer des ennemis :
