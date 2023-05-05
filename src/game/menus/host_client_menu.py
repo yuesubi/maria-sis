@@ -29,7 +29,7 @@ class HostClientMenuScene(Scene):
                     "HÔTE", pr.Color(0, 0, 0, 255), 20,
                     background_color=pr.Color(200, 100, 200, 255),
                     border_color=pr.Color(255, 100, 255, 255), border_width=3,
-                    command=lambda: print("Host")
+                    command=lambda: Scene.push_scene(SceneId.HOST_WAIT_MENU)
                 ),
                 TextButton(
                     Vec2(0, 40), Anchor.C,

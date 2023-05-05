@@ -7,10 +7,10 @@ from ...utils import ClassGetter, Stack
 class SceneId(enum.Enum):
     CONNECT_METHOD_MENU: int  = 0
     HOST_CLIENT_MENU: int  = 1
+    HOST_WAIT_MENU: int  = 5
     LEVEL: int = 2
     MAIN_MENU: int = 3
     SCAN_MENU: int = 4
-    WAIT_MENU: int  = 5
 
 
 class CreateSceneCallBack(Protocol):

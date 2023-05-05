@@ -16,10 +16,10 @@ WIDTH, HEIGHT = 16, 13
 SCENE_MAP: dict[SceneId, type[Scene]] = {
     SceneId.CONNECT_METHOD_MENU: ConnectMethodMenuScene,
     SceneId.HOST_CLIENT_MENU: HostClientMenuScene,
+    SceneId.HOST_WAIT_MENU: HostWaitMenuScene,
     SceneId.LEVEL: LevelScene,
     SceneId.MAIN_MENU: MainMenuScene,
     SceneId.SCAN_MENU: ScanMenuScene,
-    SceneId.WAIT_MENU: WaitMenuScene,
 }
 
 
@@ -76,3 +76,7 @@ class Game:
             pr.end_drawing()
             
             Time.update()
+        
+        # Fermer les scènes
+        while len(Scene._scene_stack) > 0:
+            Scene.pop_scene()

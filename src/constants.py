@@ -11,3 +11,6 @@ SCALE: float = 2.0
 PLAYER_SPEED: float = 5.0
 
 EPSILON: float = sys.float_info.epsilon
+
+SERVER_PORT = 55357
+CLIENT_PORT = 55153
