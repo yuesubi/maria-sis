@@ -1,7 +1,7 @@
 import socket
 import threading
 
-from ...constants import SERVER_PORT, TIMEOUT
+from ...constants import PACKET_SIZE, SERVER_PORT, TIMEOUT
 
 
 class ScanListener:
@@ -28,7 +28,8 @@ class ScanListener:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(TIMEOUT)
         
-        addr = "192.168.1.49", SERVER_PORT
+        addr = socket.gethostbyname(socket.gethostname()), SERVER_PORT
+        addr = "192.168.0.44", SERVER_PORT
         sock.bind(addr)
         sock.listen()
         print(f"[SCAN LISTENER] Listening on {addr[0]}:{addr[1]}")
@@ -55,7 +56,7 @@ class ScanListener:
         client_connected = True
         while client_connected and not self._should_stop:
             try:
-                msg = client.recv().decode()
+                msg = client.recv(PACKET_SIZE).decode()
                 print(f"[SCAN LISTENER] {client_ip} sent {msg}")
 
                 if msg == "":

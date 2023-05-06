@@ -131,7 +131,11 @@ class ScanMenuScene(Scene):
         ip_addr = "127.0.0.1", 30
 
         for interf in netifaces.interfaces():
-            addr_info = netifaces.ifaddresses(interf).get(netifaces.AF_INET)[0]
+            print(netifaces.ifaddresses(interf))
+            addr_info = netifaces.ifaddresses(interf).get(netifaces.AF_INET)
+            if addr_info is None:
+                continue
+            addr_info = addr_info[0]
 
             ip = addr_info.get("addr")
             netmask = ("".join([

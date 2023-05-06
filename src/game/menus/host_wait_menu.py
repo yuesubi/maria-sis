@@ -7,6 +7,7 @@ import threading
 from ...constants import SERVER_PORT
 from ...utils import Vec2
 from ..managers import Scene, SceneId
+from ..networking import ScanListener
 from .widgets import Anchor, Fit, Frame, Text, TextButton
 
 
@@ -32,11 +33,8 @@ class HostWaitMenuScene(Scene):
     def __init__(self) -> None:
         super().__init__()
 
-        self.accept_running: bool = True
-        
-        self.accept_thread: threading.Thread = \
-            threading.Thread(target=self.wait_for_connection)
-        self.accept_thread.start()
+        self.scan_listener: ScanListener = ScanListener()
+        self.scan_listener.start()
 
         # Clients
         self.clients: list[ClientData] = []
@@ -78,8 +76,7 @@ class HostWaitMenuScene(Scene):
         )
     
     def quit(self) -> None:
-        self.accept_running = False
-        self.accept_thread.join()
+        self.scan_listener.stop()
 
     def update(self) -> None:
         self.main_frame.update()
@@ -87,30 +84,8 @@ class HostWaitMenuScene(Scene):
     def render(self) -> None:
         self.main_frame.size.xy = pr.get_screen_width(), pr.get_screen_height()
         self.main_frame.render()
-    
-    def wait_for_connection(self) -> None:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(1)
-        
-        ADDR = "192.168.1.49", SERVER_PORT
-        sock.bind(ADDR)
 
-        sock.listen()
-        
-        self.accept_running = True
-        while self.accept_running:
-            try:
-                client_sock, client_addr = sock.accept()
-
-                threading.Thread(
-                    target=self.handle_client,
-                    args=(client_sock, client_addr)
-                ).start()
-
-            except TimeoutError:
-                pass
-        
-    def handle_client(self, sock: socket.socket, addr: tuple[str, int]
+    def __handle_client(self, sock: socket.socket, addr: tuple[str, int]
             ) -> None:
         
         print(f"Client connected : {addr}")
