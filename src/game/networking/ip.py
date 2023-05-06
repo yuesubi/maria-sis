@@ -16,9 +16,7 @@ class Ip:
             ip: 'Ip',
             mask: 'Ip'
         ) -> 'Ip':
-        min_ip = Ip()
-        min_ip._id = ip._id & mask._id
-        return min_ip
+        return Ip(ip.id & mask.id)
 
     @classmethod
     def max_of_net(
@@ -26,9 +24,7 @@ class Ip:
             ip: 'Ip',
             mask: 'Ip'
         ) -> 'Ip':
-        min_ip = Ip()
-        min_ip._id = (ip._id & mask._id) | (~mask._id & MAX_4_BYTE)
-        return min_ip
+        return Ip((ip.id & mask.id) | (~mask.id & MAX_4_BYTE))
 
     @classmethod
     def from_dec_str(
@@ -39,21 +35,21 @@ class Ip:
         Constructeur à partir de la représentation décimale d'une ip.
         :param dec_repr: La représentation décimale pointée de l'ip.
         """
-        ip = Ip()
+        ip = Ip(0)
         ip.dec_repr_str = dec_repr
         return ip
 
-    def __init__(self) -> None:
+    def __init__(self, id: int) -> None:
         """
         Constructeur.
         """
-        self._id: int = 0
+        self.id: int = id
     
     @property
     def dec_repr_str(self) -> str:
         """Assesseur de la représentation décimale pointée de l'adresse ip."""
         return '.'.join([
-            str((self._id >> (i * BYTE_SIZE)) & MAX_1_BYTE)
+            str((self.id >> (i * BYTE_SIZE)) & MAX_1_BYTE)
             for i in reversed(range(4))
         ])
     
@@ -65,7 +61,7 @@ class Ip:
         """
         Modificateur de la représentation décimale pointée de l'adresse ip.
         """
-        self._id = functools.reduce(
+        self.id = functools.reduce(
             op.or_,
             [
                 int(str_digit) << (d * BYTE_SIZE)
