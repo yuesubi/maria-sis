@@ -4,9 +4,30 @@ import operator as op
 
 BYTE_SIZE: int = 8
 MAX_1_BYTE: int = 0b_11111111
+MAX_4_BYTE: int = 0b_11111111_11111111_11111111_11111111
 
 
 class Ip:
+    @classmethod
+    def min_of_net(
+            cls,
+            ip: 'Ip',
+            mask: 'Ip'
+        ) -> 'Ip':
+        min_ip = Ip()
+        min_ip._id = ip._id & mask._id
+        return min_ip
+
+    @classmethod
+    def max_of_net(
+            cls,
+            ip: 'Ip',
+            mask: 'Ip'
+        ) -> 'Ip':
+        min_ip = Ip()
+        min_ip._id = (ip._id & mask._id) | (~mask._id & MAX_4_BYTE)
+        return min_ip
+
     @classmethod
     def from_dec_str(
             cls,
