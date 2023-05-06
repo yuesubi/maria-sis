@@ -14,3 +14,6 @@ EPSILON: float = sys.float_info.epsilon
 
 SERVER_PORT = 55357
 CLIENT_PORT = 55153
+
+TIMEOUT = 1.0
+PACKET_SIZE = 1024

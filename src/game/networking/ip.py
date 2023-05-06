@@ -8,6 +8,8 @@ MAX_4_BYTE: int = 0b_11111111_11111111_11111111_11111111
 
 
 class Ip:
+    """Représente une ip."""
+
     @classmethod
     def min_of_net(
             cls,
