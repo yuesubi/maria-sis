@@ -7,7 +7,7 @@ import threading
 from ...constants import SERVER_PORT
 from ...utils import Vec2
 from ..managers import Scene, SceneId
-from ..networking import ScanListener
+from ..networking import ScanListener, SELF_IP
 from .widgets import Anchor, Fit, Frame, Text, TextButton
 
 
@@ -52,7 +52,7 @@ class HostWaitMenuScene(Scene):
                 ),
                 Text(
                     Vec2(15, -15), Anchor.SW,
-                    "192.168.1.49:55555",
+                    f"{SELF_IP}:{SERVER_PORT}",
                     pr.Color(0, 0, 0, 255),
                     font_size=20
                 ),

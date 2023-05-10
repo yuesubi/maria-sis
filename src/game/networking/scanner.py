@@ -1,7 +1,9 @@
 import threading
+import time
+from typing import Callable
 import socket
 
-from ...constants import TIMEOUT, SERVER_PORT
+from ...constants import *
 from .ip import Ip
 from .network import SELF_IP, NETMASK
 
@@ -12,11 +14,19 @@ class Scanner:
     def __init__(self) -> None:
         """Constructeur."""
         self._threads: set[threading.Thread] = set()
-        self._should_stop: bool = False
+
+        self._run_lock: threading.Lock = threading.Lock()
+        self._should_stop: threading.Lock = threading.Lock()
+
+        self._connected: set[str] = set()
+        self.callback: Callable[[str], None] | None = None
 
     def start(self) -> None:
         """Commencer à scanner le réseau."""
-        self._should_stop: bool = False
+        if self._run_lock.locked():
+            raise RuntimeError("Can't start two times")
+        
+        self._run_lock.acquire()
 
         scan_thread = threading.Thread(target=self._scan_all)
         scan_thread.start()
@@ -24,11 +34,23 @@ class Scanner:
 
     def stop(self) -> None:
         """Arrêter de force le scan."""
-        self._should_stop: bool = True
+        if self._run_lock.locked():
+            self._should_stop.acquire()
 
-        for thread in self._threads:
-            thread.join()
-        self._threads.clear()
+            for thread in self._threads:
+                thread.join()
+            self._threads.clear()
+
+            self._should_stop.release()
+            self._run_lock.release()
+        
+    def is_connected(self, ip: str) -> bool:
+        """
+        Trouver si le server est toujours connecté.
+        :param ip: L'ip du server.
+        :return: Un booléen indiquant si le server est connecté.
+        """
+        return ip in self._connected
     
     def _scan_all(self) -> None:
         """Scanner tout le réseau."""
@@ -41,13 +63,16 @@ class Scanner:
         ip = Ip.min_of_net(net_ip, netmask)
         last_ip = Ip.max_of_net(net_ip, netmask)
 
-        while ip.id < last_ip.id and not self._should_stop:
+        while ip.id < last_ip.id and not self._should_stop.locked():
             try_connect_thread = threading.Thread(
                 target=self._try_connect,
                 args=(ip.dec_repr_str,)
             )
             try_connect_thread.start()
-            self._threads.add(try_connect_thread)
+            
+            if self._should_stop.acquire(blocking=False):
+                self._threads.add(try_connect_thread)
+                self._should_stop.release()
 
             ip.id += 1
 
@@ -61,8 +86,16 @@ class Scanner:
 
         try:
             sock.connect((ip, SERVER_PORT))
-            #sock.send("Hello world!\0".encode())
             print(f"[SCANNER] Connected to {ip}")
+
+            # Appeler une fonctions pour l'utilisateur
+            if self.callback is not None:
+                self.callback(ip)
+
+            while not self._should_stop.locked():
+                msg = "!info".encode()
+                sock.send(msg + b'\0' * (PACKET_SIZE - len(msg)))
+                time.sleep(WAIT_MENU_REFRESH_INTERVAL)
         
         except (ConnectionRefusedError, TimeoutError):
             pass

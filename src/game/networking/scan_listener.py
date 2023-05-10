@@ -66,7 +66,7 @@ class ScanListener:
         print(f"[SCAN LISTENER] {client_ip} connected")
 
         client.settimeout(TIMEOUT)
-        
+
         client_connected = True
         while client_connected and not self._should_stop:
             try:
