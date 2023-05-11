@@ -15,7 +15,9 @@ EPSILON: float = sys.float_info.epsilon
 #########
 # RESEAU
 
-SERVER_PORT: int = 55357
+SCAN_PORT: int = 55357
+HUB_PORT: int = 55321
+SERVER_PORT: int = 55352
 CLIENT_PORT: int = 55153
 
 TIMEOUT: float = 1.0

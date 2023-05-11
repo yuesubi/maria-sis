@@ -4,7 +4,7 @@ import pyray as pr
 import socket
 import threading
 
-from ...constants import SERVER_PORT
+from ...constants import SCAN_PORT
 from ...utils import Vec2
 from ..managers import Scene, SceneId
 from ..networking import ScanListener, SELF_IP
@@ -52,7 +52,7 @@ class HostWaitMenuScene(Scene):
                 ),
                 Text(
                     Vec2(15, -15), Anchor.SW,
-                    f"{SELF_IP}:{SERVER_PORT}",
+                    f"{SELF_IP}:{SCAN_PORT}",
                     pr.Color(0, 0, 0, 255),
                     font_size=20
                 ),

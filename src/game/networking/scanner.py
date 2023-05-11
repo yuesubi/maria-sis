@@ -77,7 +77,7 @@ class Scanner:
         sock.settimeout(TIMEOUT)
 
         try:
-            sock.connect((ip, SERVER_PORT))
+            sock.connect((ip, SCAN_PORT))
             print(f"[SCANNER] Connected to {ip}")
 
             # Appeler la fonction de connexion

@@ -1,15 +1,11 @@
 import socket
 import threading
 
-from ...constants import PACKET_SIZE, SCAN_PORT, TIMEOUT
+from ...constants import PACKET_SIZE, HUB_PORT, TIMEOUT
 from .network import SELF_IP
 
 
-class ScanListener:
-    """
-    Classe pour répondre au clients qui essayent de se connecter en scannant le
-    réseau.
-    """
+class HubHost:
 
     def __init__(self) -> None:
         """Constructeur."""
@@ -33,14 +29,14 @@ class ScanListener:
         self._threads.clear()
 
     def _listen(self) -> None:
-        """Écouter et attendre qu'un client se connecte."""
+
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(TIMEOUT)
         
-        addr = SELF_IP, SCAN_PORT
+        addr = SELF_IP, HUB_PORT
         sock.bind(addr)
         sock.listen()
-        print(f"[SCAN LISTENER] Listening on {addr[0]}:{addr[1]}")
+        print(f"[HUB HOST] Listening on {addr[0]}:{addr[1]}")
         
         while not self._should_stop:
             try:
@@ -63,7 +59,7 @@ class ScanListener:
         :param client: Le socket du client.
         :param client_ip: L'adresse ip du client.
         """
-        print(f"[SCAN LISTENER] {client_ip} connected")
+        print(f"[HUB HOST] {client_ip} connected")
 
         client.settimeout(TIMEOUT)
 
@@ -71,20 +67,12 @@ class ScanListener:
         while client_connected and not self._should_stop:
             try:
                 msg = client.recv(PACKET_SIZE).rstrip(b'\0').decode()
+                # TODO : Plutôt envoyer des message qu'en recevoir
 
                 if msg == "":
-                    print(f"[SCAN LISTENER] {client_ip} disconnected")
+                    print(f"[HUB HOST] {client_ip} disconnected")
                     client_connected = False
-                # elif msg[0] == '!':
-                #     command = msg[1:]
 
-                #     # Envoyer des information au client si il le demande
-                #     if command == "info":
-                #         info = ("?" + json.dumps({
-                #             "cnt": len(self._threads)
-                #         })).encode()
-                #         client.send(info + b'\0' * (PACKET_SIZE - len(info)))
-                    
             except TimeoutError:
                 pass
         

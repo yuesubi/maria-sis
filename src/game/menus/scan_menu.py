@@ -2,7 +2,7 @@
 
 import pyray as pr
 
-from ...constants import SERVER_PORT
+from ...constants import SCAN_PORT
 from ...utils import Vec2
 from ..managers import Scene, SceneId
 from ..networking import Scanner
