@@ -1,3 +1,4 @@
+import json
 import socket
 import threading
 
@@ -70,13 +71,21 @@ class ScanListener:
         client_connected = True
         while client_connected and not self._should_stop:
             try:
-                msg = client.recv(PACKET_SIZE).decode()
-                print(f"[SCAN LISTENER] {client_ip} sent \"{msg}\"")
+                msg = client.recv(PACKET_SIZE).rstrip(b'\0').decode()
 
                 if msg == "":
                     print(f"[SCAN LISTENER] {client_ip} disconnected")
                     client_connected = False
-            
+                # elif msg[0] == '!':
+                #     command = msg[1:]
+
+                #     # Envoyer des information au client si il le demande
+                #     if command == "info":
+                #         info = ("?" + json.dumps({
+                #             "cnt": len(self._threads)
+                #         })).encode()
+                #         client.send(info + b'\0' * (PACKET_SIZE - len(info)))
+                    
             except TimeoutError:
                 pass
         

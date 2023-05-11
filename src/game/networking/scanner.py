@@ -18,8 +18,8 @@ class Scanner:
         self._run_lock: threading.Lock = threading.Lock()
         self._should_stop: threading.Lock = threading.Lock()
 
-        self._connected: set[str] = set()
-        self.callback: Callable[[str], None] | None = None
+        self.conn_cbk: Callable[[str], None] | None = None
+        self.disconn_cbk: Callable[[str], None] | None = None
 
     def start(self) -> None:
         """Commencer à scanner le réseau."""
@@ -44,14 +44,6 @@ class Scanner:
             self._should_stop.release()
             self._run_lock.release()
         
-    def is_connected(self, ip: str) -> bool:
-        """
-        Trouver si le server est toujours connecté.
-        :param ip: L'ip du server.
-        :return: Un booléen indiquant si le server est connecté.
-        """
-        return ip in self._connected
-    
     def _scan_all(self) -> None:
         """Scanner tout le réseau."""
 
@@ -88,14 +80,18 @@ class Scanner:
             sock.connect((ip, SERVER_PORT))
             print(f"[SCANNER] Connected to {ip}")
 
-            # Appeler une fonctions pour l'utilisateur
-            if self.callback is not None:
-                self.callback(ip)
+            # Appeler la fonction de connexion
+            if self.conn_cbk is not None:
+                self.conn_cbk(ip)
 
             while not self._should_stop.locked():
-                msg = "!info".encode()
-                sock.send(msg + b'\0' * (PACKET_SIZE - len(msg)))
+                # msg = "!info".encode()
+                # sock.send(msg + b'\0' * (PACKET_SIZE - len(msg)))
                 time.sleep(WAIT_MENU_REFRESH_INTERVAL)
+            
+            # Appeler la fonction de déconnexion
+            if self.disconn_cbk is not None:
+                self.disconn_cbk(ip)
         
         except (ConnectionRefusedError, TimeoutError):
             pass

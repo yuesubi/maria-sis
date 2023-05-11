@@ -28,7 +28,8 @@ class ScanMenuScene(Scene):
         super().__init__()
 
         self.scanner: Scanner = Scanner()
-        self.scanner.callback = self.add_server_frame
+        self.scanner.conn_cbk = self.add_server_frame
+        self.scanner.disconn_cbk = self.remove_sever_frame
 
         self.servers: dict[str, Frame] = {}
 
@@ -67,21 +68,15 @@ class ScanMenuScene(Scene):
     def update(self) -> None:
         self.main_frame.update()
 
-        ips_to_del = set()
-        for ip, frame in self.servers.items():
-            if not self.scanner.is_connected(ip):
-                print(ip)
-                self.main_frame.remove_child(frame)
-                ips_to_del.add(ip)
-        for ip in ips_to_del:
-            del self.servers[ip]
-
-
     def render(self) -> None:
         self.main_frame.size.xy = pr.get_screen_width(), pr.get_screen_height()
         self.main_frame.render()
     
     def add_server_frame(self, ip: str) -> None:
+        """
+        Ajouter un cadre avec les infos d'un server.
+        :param ip: L'ip du cadre.
+        """
         frame = Frame(
             Vec2(15, 55 + 25 * len(self.servers)), Anchor.NW,
             Vec2(250, 20), Fit.NONE,
@@ -105,3 +100,10 @@ class ScanMenuScene(Scene):
 
         self.main_frame.add_child(frame)
         self.servers[ip] = frame
+    
+    def remove_sever_frame(self, ip: str) -> None:
+        """
+        Retirer un cadre avec les infos d'un server.
+        :param ip: L'ip du cadre.
+        """
+        self.main_frame.remove_child(self.servers[ip])
