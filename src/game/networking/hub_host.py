@@ -14,6 +14,7 @@ class HubHost:
 
     def start(self) -> None:
         """Commencer à écouter."""
+        print(f"[HUB HOST] Starting")
         self._should_stop = False
 
         listen_thread = threading.Thread(target=self._listen)
@@ -22,6 +23,7 @@ class HubHost:
 
     def stop(self) -> None:
         """Arrêter d'écouter."""
+        print(f"[HUB HOST] Stopping")
         self._should_stop = True
 
         for thread in self._threads:
@@ -67,14 +69,14 @@ class HubHost:
         while client_connected and not self._should_stop:
             try:
                 msg = client.recv(PACKET_SIZE).rstrip(b'\0').decode()
-                # TODO : Plutôt envoyer des message qu'en recevoir
-
                 if msg == "":
                     print(f"[HUB HOST] {client_ip} disconnected")
                     client_connected = False
-
             except TimeoutError:
                 pass
+
+            msg = "This is a message from the server".encode()
+            client.send(msg + b'\0' * (PACKET_SIZE - len(msg)))
         
         try:
             self._threads.remove(threading.current_thread())

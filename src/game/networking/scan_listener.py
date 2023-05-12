@@ -18,6 +18,7 @@ class ScanListener:
 
     def start(self) -> None:
         """Commencer à écouter."""
+        print(f"[SCAN LISTENER] Starting")
         self._should_stop = False
 
         listen_thread = threading.Thread(target=self._listen)
@@ -26,6 +27,7 @@ class ScanListener:
 
     def stop(self) -> None:
         """Arrêter d'écouter."""
+        print(f"[SCAN LISTENER] Stopping")
         self._should_stop = True
 
         for thread in self._threads:

@@ -1,30 +1,12 @@
 """Le menu d'attente pour se connecter."""
 
 import pyray as pr
-import socket
-import threading
 
 from ...constants import SCAN_PORT
 from ...utils import Vec2
 from ..managers import Scene, SceneId
-from ..networking import ScanListener, SELF_IP
+from ..networking import HubHost, ScanListener, SELF_IP
 from .widgets import Anchor, Fit, Frame, Text, TextButton
-
-
-class ClientData:
-    def __init__(
-        self,
-        name: str,
-        addr: tuple[str, int],
-        sock: socket.socket,
-        thrd: threading.Thread,
-        text: Text
-    ) -> None:
-        self.name: str = name
-        self.addr: tuple[str, int] = addr
-        self.sock: socket.socket = sock
-        self.thrd: threading.Thread = thrd
-        self.text: Text = text
 
 
 class HubHostMenuScene(Scene):
@@ -36,9 +18,9 @@ class HubHostMenuScene(Scene):
         self.scan_listener: ScanListener = ScanListener()
         self.scan_listener.start()
 
-        # Clients
-        self.clients: list[ClientData] = []
-        
+        self.hub_host: HubHost = HubHost()
+        self.hub_host.start()
+
         # Interface graphique
         self.main_frame: Frame = Frame(
             Vec2(0, 0), Anchor.NW,
@@ -77,6 +59,7 @@ class HubHostMenuScene(Scene):
     
     def quit(self) -> None:
         self.scan_listener.stop()
+        self.hub_host.stop()
 
     def update(self) -> None:
         self.main_frame.update()
@@ -84,25 +67,3 @@ class HubHostMenuScene(Scene):
     def render(self) -> None:
         self.main_frame.size.xy = pr.get_screen_width(), pr.get_screen_height()
         self.main_frame.render()
-
-    def __handle_client(self, sock: socket.socket, addr: tuple[str, int]
-            ) -> None:
-        
-        print(f"Client connected : {addr}")
-        
-        name = sock.recv(1024).decode().split("\0")[0]
-        
-        text = Text(
-            Vec2(15, 55 + 25*len(self.clients)), Anchor.NW,
-            f"- {name}",
-            pr.Color(0, 0, 0, 255),
-            font_size=20
-        )
-        self.main_frame.add_child(text)
-        
-        client_data = ClientData(
-            name,
-            addr, sock,
-            threading.current_thread(), text
-        )
-        self.clients.append(client_data)
