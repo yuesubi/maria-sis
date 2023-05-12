@@ -26,6 +26,45 @@ python maria-sis.py
 ```
 
 
+## Arborescence
+```txt
+-assets/                            Les ressources pour le projet
+-maps/                              Les cartes des niveaux de maria sis
+-src/                               Le code source
+    -game/                          Le code de maria sis
+        -assets/                    Les constantes des chemins vers les ressources
+            -characters/            Pour les personnage
+                -maria.py           Pour maria
+            -tile_sets/             Pour le décorations
+                -over_world.py      Pour le monde normal
+        -level/                     La scène de niveau du jeu
+            -block/                 Les blocks
+                -block.py           La classe abstraite d'un block
+                -decorative.py      Un block décoratif
+            -collider/              Les détecteur/solveurs de collision
+                -rect_collider.py   Pour un rectangle
+            -entity/                Les entités
+                -entity.py          La classe abstraite d'une entité
+                -player.py          Le joueur
+            -level_map/             ...
+            -camera.py              La camera
+            -level.py               La scène de niveau
+        -managers/                  Les gestionnaires
+            -scene.py               ...
+            -time_manager.py        De temps
+        -menus/                     ...
+        -game.py                    L'application principale du jeu
+    -tests/                         ...
+    -utils/                         Du code utilitaire qui n'est pas spécifique au projet
+        -data_structures/           ...
+        -math/                      Outils mathématiques
+            -vec2.py                Un vecteur du plan (2D)
+        -custom_decorators.py       ...
+    -constants.py                   Les constantes du jeu
+    -tests.py                       ...
+```
+
+
 ## Schémas
 
 ### Modules
