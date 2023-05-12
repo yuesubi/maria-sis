@@ -27,7 +27,7 @@ class ClientData:
         self.text: Text = text
 
 
-class HostWaitMenuScene(Scene):
+class HubHostMenuScene(Scene):
     """Le menu d'attente pour se connecter."""
 
     def __init__(self) -> None:

@@ -16,7 +16,7 @@ WIDTH, HEIGHT = 16, 13
 SCENE_MAP: dict[SceneId, type[Scene]] = {
     SceneId.CONNECT_METHOD_MENU: ConnectMethodMenuScene,
     SceneId.HOST_CLIENT_MENU: HostClientMenuScene,
-    SceneId.HOST_WAIT_MENU: HostWaitMenuScene,
+    SceneId.HUB_HOST_MENU: HubHostMenuScene,
     SceneId.LEVEL: LevelScene,
     SceneId.MAIN_MENU: MainMenuScene,
     SceneId.SCAN_MENU: ScanMenuScene,
