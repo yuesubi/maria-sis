@@ -68,12 +68,11 @@ class RectCollider:
         double_size_x = (self.size.x + other.size.x) / 2.0
         delta_pos = other.position - other_previous_pos
 
-        t_x = 0.0
+        t_x = float("-inf")
         if delta_pos.x != 0.0:
-            t_x = min(
-                (self.x - other_previous_pos.x + double_size_x) / delta_pos.x,
-                (self.x - other_previous_pos.x - double_size_x) / delta_pos.x
-            )
+            t_x = (self.x - other_previous_pos.x + double_size_x) / delta_pos.x
+            if t_x > 1.0:
+                t_x = (self.x - other_previous_pos.x - double_size_x) / delta_pos.x
         
         return t_x
         
@@ -89,11 +88,10 @@ class RectCollider:
         double_size_y = (self.size.y + other.size.y) / 2.0
         delta_pos = other.position - other_previous_pos
 
-        t_y = 0.0
+        t_y = float("inf")
         if delta_pos.y != 0.0:
-            t_y = min(
-                (self.y - other_previous_pos.y + double_size_y) / delta_pos.y,
-                (self.y - other_previous_pos.y - double_size_y) / delta_pos.y
-            )
+            t_y = (self.y - other_previous_pos.y + double_size_y) / delta_pos.y
+            if t_y > 1.0:
+                t_y = (self.y - other_previous_pos.y - double_size_y) / delta_pos.y
         
         return t_y
