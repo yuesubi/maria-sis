@@ -29,7 +29,7 @@ class HostOrClientMenuScene(Scene):
                     "HÔTE", pr.Color(0, 0, 0, 255), 20,
                     background_color=pr.Color(200, 100, 200, 255),
                     border_color=pr.Color(255, 100, 255, 255), border_width=3,
-                    command=lambda: Scene.push_scene(SceneId.HUB_HOST_MENU)
+                    command=lambda: Scene.switch_scene(SceneId.HUB_HOST_MENU)
                 ),
                 TextButton(
                     Vec2(0, 40), Anchor.C,
@@ -37,7 +37,8 @@ class HostOrClientMenuScene(Scene):
                     "CLIENT", pr.Color(0, 0, 0, 255), 20,
                     background_color=pr.Color(200, 100, 200, 255),
                     border_color=pr.Color(255, 100, 255, 255), border_width=3,
-                    command=lambda: Scene.push_scene(SceneId.CONNECT_METHOD_MENU)
+                    command=lambda:
+                        Scene.switch_scene(SceneId.CONNECT_METHOD_MENU)
                 ),
                 TextButton(
                     Vec2(0, 100), Anchor.C,
@@ -45,7 +46,7 @@ class HostOrClientMenuScene(Scene):
                     "RETOUR", pr.Color(0, 0, 0, 255), 16,
                     background_color=pr.Color(200, 100, 200, 255),
                     border_color=pr.Color(255, 100, 255, 255), border_width=3,
-                    command=lambda: Scene.pop_scene()
+                    command=lambda: Scene.switch_scene(SceneId.MAIN_MENU)
                 )
             ]
         )

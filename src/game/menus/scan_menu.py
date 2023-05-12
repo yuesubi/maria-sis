@@ -2,7 +2,6 @@
 
 import pyray as pr
 
-from ...constants import SCAN_PORT
 from ...utils import Vec2
 from ..managers import Scene, SceneId
 from ..networking import Scanner
@@ -49,7 +48,8 @@ class ScanMenuScene(Scene):
                     "QUITTER", pr.Color(0, 0, 0, 255), 16,
                     background_color=pr.Color(200, 100, 200, 255),
                     border_color=pr.Color(255, 100, 255, 255), border_width=3,
-                    command=lambda: Scene.pop_scene()
+                    command=lambda:
+                        Scene.switch_scene(SceneId.CONNECT_METHOD_MENU)
                 ),
                 TextButton(
                     Vec2(-15, -15), Anchor.SE,
@@ -93,7 +93,10 @@ class ScanMenuScene(Scene):
                     "-C", pr.Color(0, 0, 0, 255), 16,
                     background_color=pr.Color(200, 100, 200, 255),
                     border_color=pr.Color(255, 100, 255, 255), border_width=3,
-                    command=None
+                    command=lambda: Scene.switch_scene(
+                        SceneId.HUB_CLIENT_MENU,
+                        ip
+                    )
                 )
             ]
         )

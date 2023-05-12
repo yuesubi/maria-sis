@@ -1,25 +1,26 @@
-"""Le menu d'attente pour se connecter."""
+"""Le menu d'attente pour se connecter (client)."""
 
 import pyray as pr
 
-from ...constants import SCAN_PORT
 from ...utils import Vec2
 from ..managers import Scene, SceneId
-from ..networking import HubHost, ScanListener, SELF_IP
+from ..networking import HubHost, ScanListener
 from .widgets import Anchor, Fit, Frame, Text, TextButton
 
 
-class HubHostMenuScene(Scene):
-    """Le menu d'attente pour se connecter."""
+class HubClientMenuScene(Scene):
+    """Le menu d'attente pour se connecter (client)."""
 
-    def __init__(self) -> None:
+    def __init__(self, server_ip: str) -> None:
+        """
+        Constructeur.
+        :param server_ip: L'ip du server qui gère la salle d'attente.
+        """
         super().__init__()
 
-        self.scan_listener: ScanListener = ScanListener()
-        self.scan_listener.start()
+        # TODO: Add hub client & start
 
-        self.hub_host: HubHost = HubHost()
-        self.hub_host.start()
+        self.server_ip: str = server_ip
 
         # Interface graphique
         self.main_frame: Frame = Frame(
@@ -34,33 +35,23 @@ class HubHostMenuScene(Scene):
                 ),
                 Text(
                     Vec2(15, -15), Anchor.SW,
-                    f"{SELF_IP}",
+                    f"{server_ip}",
                     pr.Color(0, 0, 0, 255),
                     font_size=20
                 ),
                 TextButton(
-                    Vec2(-130, -15), Anchor.SE,
+                    Vec2(-15, -15), Anchor.SE,
                     Vec2(100, 40), Fit.NONE,
                     "QUITTER", pr.Color(0, 0, 0, 255), 16,
                     background_color=pr.Color(200, 100, 200, 255),
                     border_color=pr.Color(255, 100, 255, 255), border_width=3,
-                    command=lambda:
-                        Scene.switch_scene(SceneId.HOST_OR_CLIENT_MENU)
-                ),
-                TextButton(
-                    Vec2(-15, -15), Anchor.SE,
-                    Vec2(100, 40), Fit.NONE,
-                    "JOUER", pr.Color(0, 0, 0, 255), 16,
-                    background_color=pr.Color(200, 100, 200, 255),
-                    border_color=pr.Color(255, 100, 255, 255), border_width=3,
-                    command=lambda: None
+                    command=lambda: Scene.pop_scene()
                 )
             ]
         )
     
     def quit(self) -> None:
-        self.scan_listener.stop()
-        self.hub_host.stop()
+        pass
 
     def update(self) -> None:
         self.main_frame.update()
