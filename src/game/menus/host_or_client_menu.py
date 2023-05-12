@@ -7,7 +7,7 @@ from ..managers import Scene, SceneId
 from .widgets import Anchor, Fit, Frame, Text, TextButton
 
 
-class HostClientMenuScene(Scene):
+class HostOrClientMenuScene(Scene):
     """Le menu de choix pour être l'hôte ou le client."""
 
     def __init__(self) -> None:
