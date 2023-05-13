@@ -1,5 +1,8 @@
 import pyray as pr
 
+from src.utils import Vec2
+
+from ....constants import EPSILON
 from ....utils import Vec2
 from ...assets import MARIA_FRAMES, MARIA_SPRITE_SHEET
 from ...managers import Time
@@ -20,18 +23,19 @@ class Player(Entity):
         super().__init__(
             # La position est un vecteur mais en gros c'est un point, il y a
             # juste pas de classe Point dans pygame.
-            position=Vec2.null
+            position=Vec2.null,
+            size=Vec2(1, 1)
         )
         self.velocity: Vec2 = Vec2.null
         self.texture: pr.Texture = pr.load_texture(MARIA_SPRITE_SHEET)
     
-    @property
-    def rect_collider(self) -> RectCollider:
-        # Rectangle de collision quand Maria est petite
-        return RectCollider(
-            self.position + Vec2(0, 0.5),
-            Vec2(1, 1)
-        )
+    def on_collision(self, resolve_vec: Vec2):
+        self.position += resolve_vec
+
+        if resolve_vec.x > EPSILON:
+            self.velocity.x = 0
+        if resolve_vec.y > EPSILON:
+            self.velocity.y = 0
 
     def fixed_update(self) -> None:
         # Ajouter la vélocité à la position en la multipliant par le temps
@@ -41,10 +45,12 @@ class Player(Entity):
         self.position += self.velocity * Time.fixed_delta_time
 
     def update(self) -> None:
+        x_mov = 0.0
         if pr.is_key_down(pr.KeyboardKey.KEY_RIGHT):
-            self.velocity.x = 4
+            x_mov += 4
         if pr.is_key_down(pr.KeyboardKey.KEY_LEFT):
-            self.velocity.x = -4
+            x_mov -= 4
+        self.velocity.x = x_mov
         
         if pr.is_key_pressed(pr.KeyboardKey.KEY_SPACE):
             self.velocity.y = -10

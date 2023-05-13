@@ -1,4 +1,4 @@
-import os
+import os, time
 
 from ...constants import EPSILON
 from ...utils import Vec2
@@ -24,23 +24,24 @@ class LevelScene(Scene):
         self.player: Player = Player()
         self.player.position = self.level_map.spawn_point + Vec2(0, -0.5)
 
-        self.entities: list[Entity] = list()
+        self.entities: set[Entity] = set()
+        self.entities.add(self.player)
         
         self.camera: Camera = Camera()
-        self.camera.position = self.player.position
+        self.camera.position = self.player.position.copy
     
     def fixed_update(self) -> None:
-        prev_position = self.player.rect_collider.position
-        self.player.fixed_update()
-        
-        if self.player.position.y > 20:
-            self.player.position.y = 0
-
-        self.detect_player_collision(prev_position)
-
         for entity in self.entities:
+            prev_pos = entity.position.copy
             entity.fixed_update()
 
+            resolve_vec = self.detect_block_collision(entity, prev_pos)
+            if resolve_vec.sqrd_len() > EPSILON:
+                entity.on_collision(resolve_vec)
+
+        if self.player.position.y > 20:
+            self.player.position.y = 0
+        
         self.camera.position = self.camera.position.lerp(
             self.player.position + CAMERA_OFFSET,
             Time.fixed_delta_time * 4
@@ -57,10 +58,12 @@ class LevelScene(Scene):
             self.level_map.bottom_right.y
         )
     
-    def detect_player_collision(self, prev_position: Vec2) -> None:
+    def detect_block_collision(self, entity, prev_position: Vec2) -> Vec2:
         """
-        Detection des collisions du joueur.
-        :param prev_position: La position du joueur avant le mouvement.
+        Detection des collisions d'une entité avec les blocks.
+        :param entity: L'entité.
+        :param prev_position: La position avant le mouvement.
+        :return: La translation qui résout l'éventuelle collision.
         """
 
         # Trouver les blocks à vérifier (il y a besoin de vérifier que les
@@ -90,48 +93,41 @@ class LevelScene(Scene):
         # Pour chaque block à vérifier
         for block in blocks_to_check:
             # Si il y a collision
-            if block.rect_collider.is_colliding_rect(self.player.rect_collider):
+            if block.rect_collider.is_colliding_rect(entity.rect_collider):
                 # Calculer la part qu'on peut conserver pour que la collision
                 # soit résolue
                 new_x_t = min(
                     x_t,
                     block.rect_collider.resolve_collision_x_rewind(
-                        self.player.rect_collider, prev_position
+                        entity.rect_collider, prev_position
                     )
                 )
                 new_y_t = min(
                     y_t,
                     block.rect_collider.resolve_collision_y_rewind(
-                        self.player.rect_collider, prev_position
+                        entity.rect_collider, prev_position
                     )
                 )
 
                 # Choisir la plus grande part
                 if new_x_t > new_y_t:
-                    x_t = min(new_x_t, x_t)
+                    x_t = new_x_t
                 else:
-                    y_t = min(new_y_t, y_t)
+                    y_t = new_y_t
         
-        delta_position = self.player.rect_collider.position - prev_position
+        delta_position = entity.position - prev_position
         resolve_vector = Vec2(
             delta_position.x * x_t,
             delta_position.y * y_t
         )
 
-        self.player.position -= delta_position
-        self.player.position += resolve_vector
-
-        # Remettre à zéro la vélocité si besoin.
-        if x_t + EPSILON < 1.0:
-            self.player.velocity.x = 0.0
-        if y_t + EPSILON < 1.0:
-            self.player.velocity.y = 0.0
+        return resolve_vector - delta_position
 
     def update(self) -> None:
         self.player.update()
 
         for entity in self.entities:
-            entity.update(self.camera)
+            entity.update()
     
     def render(self) -> None:
         self.camera.begin_render()

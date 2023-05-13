@@ -13,6 +13,6 @@ MARIA_FRAMES: list[pr.Rectangle] = list(map(
         rec_tuple[2], rec_tuple[3]
     ),
     [
-        (8, 0, 16, 32)
+        (8, 16, 16, 16)
     ]
 ))

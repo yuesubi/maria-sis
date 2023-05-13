@@ -83,6 +83,14 @@ class Vec2:
     ############################################################################
     # OPÉRATIONS
 
+    def len(self) -> float:
+        """Calculer la norme du vecteur."""
+        return math.sqrt(self.x*self.x + self.y*self.y)
+
+    def sqrd_len(self) -> float:
+        """Calculer la norme carrée du vecteur."""
+        return self.x*self.x + self.y*self.y
+
     def dot(self, other: 'Vec2') -> float:
         """
         Produit scalaire du Vec2 avec other.

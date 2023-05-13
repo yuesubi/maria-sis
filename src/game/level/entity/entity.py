@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractmethod
 
 from ....utils import Vec2
 from ..camera import Camera
@@ -11,19 +11,31 @@ class Entity(ABC):
     cette classe et implémenter les méthode abstraites.
     """
 
-    def __init__(self, position: Vec2) -> None:
+    def __init__(self, position: Vec2, size: Vec2) -> None:
         """
         Constructeur.
-        :param position: La position de l'entité.
+        :param position: La position.
+        :param size: La taille.
         """
         super().__init__()
         self.position: Vec2 = position
+        self.size: Vec2 = size
     
-    @abstractproperty
+    @property
     def rect_collider(self) -> RectCollider:
         """
         Assesseur du rectangle de collision.
         :return: Le rectangle de collision.
+        """
+        return RectCollider(self.position.copy, self.size.copy)
+    
+    @abstractmethod
+    def on_collision(self, resolve_vec: Vec2) -> None:
+        """
+        Méthode appelée quand une collision est résolue. Il faut au minimum
+        appliquer le vecteur de résolution. (Doit être implémentée par la classe
+        enfant)
+        :param resolve_vec: La translation qui résout la collision.
         """
 
     @abstractmethod
