@@ -158,3 +158,5 @@ V              V
 * 2023/04/16 0h30 Ajout du menu principal et des widgets.
 * 2023/04/26 1h00 Passage de toutes le utilisation de pygame à pyray.
 * 2023/04/27 0h30 Correction des erreurs de typage.
+* 2023/05/06 1h00 Ajout de la partie réseau pour le multijoueur
+* 2023/05/11 1h00 Finition du menu de scan.
