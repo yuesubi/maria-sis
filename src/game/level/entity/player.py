@@ -32,9 +32,9 @@ class Player(Entity):
     def on_collision(self, resolve_vec: Vec2):
         self.position += resolve_vec
 
-        if resolve_vec.x > EPSILON:
+        if abs(resolve_vec.x) > EPSILON:
             self.velocity.x = 0
-        if resolve_vec.y > EPSILON:
+        if abs(resolve_vec.y) > EPSILON:
             self.velocity.y = 0
 
     def fixed_update(self) -> None:

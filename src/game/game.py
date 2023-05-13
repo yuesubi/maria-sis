@@ -71,8 +71,8 @@ class Game:
             pr.clear_background(pr.Color(150, 150, 150))
 
             Scene.current_scene.render()
-            pr.draw_fps(8, 8)
-            pr.draw_text(str(round(Time.fixed_fps)) + " fixed fps", 8, 28, 20, pr.WHITE)
+            # pr.draw_fps(8, 8)
+            # pr.draw_text(str(round(Time.fixed_fps)) + " fixed fps", 8, 28, 20, pr.WHITE)
             
             pr.end_drawing()
             

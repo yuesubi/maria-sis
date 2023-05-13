@@ -36,7 +36,7 @@ class LevelScene(Scene):
             entity.fixed_update()
 
             resolve_vec = self.detect_block_collision(entity, prev_pos)
-            if resolve_vec.sqrd_len() > EPSILON:
+            if abs(resolve_vec.x) > EPSILON or abs(resolve_vec.y) > EPSILON:
                 entity.on_collision(resolve_vec)
 
         if self.player.position.y > 20:
