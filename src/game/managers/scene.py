@@ -4,14 +4,15 @@ from typing import Any, Protocol
 from ...utils import ClassGetter, Stack
 
 
-class SceneId(enum.Enum):
-    CONNECT_METHOD_MENU: int  = 0
-    HOST_OR_CLIENT_MENU: int  = 1
-    HUB_CLIENT_MENU: int  = 2
-    HUB_HOST_MENU: int  = 3
-    LEVEL: int = 4
-    MAIN_MENU: int = 5
-    SCAN_MENU: int = 6
+SceneId = enum.Enum("SceneId", [
+    "CONNECT_METHOD_MENU",
+    "HOST_OR_CLIENT_MENU",
+    "HUB_CLIENT_MENU",
+    "HUB_HOST_MENU",
+    "LEVEL",
+    "MAIN_MENU",
+    "SCAN_MENU",
+])
 
 
 class CreateSceneCallBack(Protocol):

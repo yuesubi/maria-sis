@@ -4,7 +4,7 @@ import pyray as pr
 
 from ...utils import Vec2
 from ..managers import Scene, SceneId
-from ..networking import HubHost, ScanListener
+from ..networking import HubClient
 from .widgets import Anchor, Fit, Frame, Text, TextButton
 
 
@@ -18,7 +18,8 @@ class HubClientMenuScene(Scene):
         """
         super().__init__()
 
-        # TODO: Add hub client & start
+        self.hub_client: HubClient = HubClient(server_ip)
+        self.hub_client.start()
 
         self.server_ip: str = server_ip
 
@@ -45,13 +46,13 @@ class HubClientMenuScene(Scene):
                     "QUITTER", pr.Color(0, 0, 0, 255), 16,
                     background_color=pr.Color(200, 100, 200, 255),
                     border_color=pr.Color(255, 100, 255, 255), border_width=3,
-                    command=lambda: Scene.pop_scene()
+                    command=lambda: Scene.switch_scene(SceneId.SCAN_MENU)
                 )
             ]
         )
     
     def quit(self) -> None:
-        pass
+        self.hub_client.stop()
 
     def update(self) -> None:
         self.main_frame.update()

@@ -65,18 +65,18 @@ class HubHost:
 
         client.settimeout(TIMEOUT)
 
-        client_connected = True
-        while client_connected and not self._should_stop:
-            try:
-                msg = client.recv(PACKET_SIZE).rstrip(b'\0').decode()
-                if msg == "":
-                    print(f"[HUB HOST] {client_ip} disconnected")
-                    client_connected = False
-            except TimeoutError:
-                pass
+        try:
+            while not self._should_stop:
+                try:
+                    msg = client.recv(PACKET_SIZE).rstrip(b'\0').decode()
+                except TimeoutError:
+                    pass
 
-            msg = "This is a message from the server".encode()
-            client.send(msg + b'\0' * (PACKET_SIZE - len(msg)))
+                msg = "This is a message from the server".encode()
+                client.send(msg + b'\0' * (PACKET_SIZE - len(msg)))
+        
+        except (BrokenPipeError, ConnectionResetError):
+            print(f"[HUB HOST] {client_ip} disconnected")
         
         try:
             self._threads.remove(threading.current_thread())
