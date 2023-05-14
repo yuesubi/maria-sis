@@ -1,17 +1,19 @@
 import os
 import pyray as pr
+import socket
 
-from ...constants import CAMERA_OFFSET
+from ...constants import *
 from ..managers import Time, Scene
+from ..networking import SELF_IP
 from .camera import Camera
 from .entity import Player
 from .level import Level
 
 
-class SingleLevelScene(Scene):
-    """Le niveau en solo."""
+class ClientMultipleLevelScene(Scene):
+    """L'hôte d'un niveau multijoueur."""
 
-    def __init__(self) -> None:
+    def __init__(self, server_ip: str) -> None:
         """Constructeur."""
         super().__init__()
 
@@ -23,6 +25,11 @@ class SingleLevelScene(Scene):
         
         self.camera: Camera = Camera()
         self.camera.position = self.level.level_map.spawn_point.copy
+
+        self.server_ip: str = server_ip
+        self.socket: socket.socket = \
+            socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket.bind((SELF_IP, GAME_CLIENT_PORT))
     
     def fixed_update(self) -> None:
         self.level.fixed_update()
@@ -48,6 +55,16 @@ class SingleLevelScene(Scene):
         inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
         inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
         inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
+
+        msg = '1' if inputs.pressing_left else '0' + \
+            '1' if inputs.pressing_right else '0' + \
+            '1' if inputs.pressing_jump else '0' + "0"
+        data = msg.encode()
+
+        self.socket.sendto(
+            data + b' ' * (PACKET_SIZE - len(data)),
+            (self.server_ip, GAME_SERVER_PORT)
+        )
 
         self.player.update(inputs)
     
