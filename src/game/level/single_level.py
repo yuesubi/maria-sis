@@ -51,7 +51,7 @@ class SingleLevelScene(Scene):
         inputs = Player.Inputs()
         inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
         inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
-        inputs.pressing_jump = pr.is_key_pressed(pr.KeyboardKey.KEY_SPACE)
+        inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
 
         self.player.update(inputs)
     

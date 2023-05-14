@@ -35,11 +35,16 @@ class Player(Entity):
             position=Vec2.null,
             size=Vec2(1, 1)
         )
+
         self.velocity: Vec2 = Vec2.null
         self.texture: pr.Texture = pr.load_texture(MARIA_SPRITE_SHEET)
+
+        self.can_jump: bool = False
     
     def on_collision(self, resolve_vec: Vec2):
         self.position += resolve_vec
+        
+        self.can_jump = resolve_vec.y < EPSILON and self.velocity.y > 0
 
         if abs(resolve_vec.x) > EPSILON:
             self.velocity.x = 0
@@ -53,6 +58,8 @@ class Player(Entity):
         self.velocity += Vec2(0, 15) * Time.fixed_delta_time
         self.position += self.velocity * Time.fixed_delta_time
 
+        self.can_jump = False
+
     def update(self, inputs: Inputs) -> None:
         x_mov = 0.0
         if inputs.pressing_right:
@@ -61,7 +68,7 @@ class Player(Entity):
             x_mov -= 4
         self.velocity.x = x_mov
         
-        if inputs.pressing_jump:
+        if inputs.pressing_jump and self.can_jump:
             self.velocity.y = -12
     
     def draw(self, camera: Camera) -> None:
