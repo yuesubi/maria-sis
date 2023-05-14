@@ -1,64 +1,46 @@
-import os, time
+import os
 
 from ...constants import EPSILON
 from ...utils import Vec2
-from ..managers import Time, Scene
-from .camera import Camera
+from ..managers import Scene
 from .entity import Entity, Player
 from .level_map import LevelMap
 
 
-CAMERA_OFFSET: Vec2 = Vec2(0, -2)
-
-
-class LevelScene(Scene):
-    """Scène de niveau."""
+class Level(Scene):
+    """Un niveau."""
     
-    def __init__(self) -> None:
+    def __init__(self, players: set[Player], map_path: str) -> None:
+        """
+        Constructeur.
+        :param players: Les joueurs.
+        :param map_path: Le chemin vers la carte du niveau.
+        """
         super().__init__()
 
-        map_path = os.path.join(os.path.dirname(__file__), "..", "..", "..",
-            "maps", "sample.png")
         self.level_map = LevelMap.create_from_file(map_path)
+        spawn_point = self.level_map.spawn_point + Vec2(0, -0.5)
 
-        self.player: Player = Player()
-        self.player.position = self.level_map.spawn_point + Vec2(0, -0.5)
+        self.players: set[Player] = players
+        for player in self.players:
+            player.position = spawn_point
 
-        self.entities: set[Entity] = set()
-        self.entities.add(self.player)
-        
-        self.camera: Camera = Camera()
-        self.camera.position = self.player.position.copy
+        self.entities: set[Entity] = set(self.players)
     
     def fixed_update(self) -> None:
         for entity in self.entities:
             prev_pos = entity.position.copy
             entity.fixed_update()
 
-            resolve_vec = self.detect_block_collision(entity, prev_pos)
+            resolve_vec = self._detect_block_collision(entity, prev_pos)
             if abs(resolve_vec.x) > EPSILON or abs(resolve_vec.y) > EPSILON:
                 entity.on_collision(resolve_vec)
 
-        if self.player.position.y > 20:
-            self.player.position.y = 0
-        
-        self.camera.position = self.camera.position.lerp(
-            self.player.position + CAMERA_OFFSET,
-            Time.fixed_delta_time * 4
-        )
-
-        self.camera.position.x = min(max(
-            self.camera.position.x,
-            self.level_map.top_left.x),
-            self.level_map.bottom_right.x
-        )
-        self.camera.position.y = min(max(
-            self.camera.position.y,
-            self.level_map.top_left.y),
-            self.level_map.bottom_right.y
-        )
+        for player in self.players:
+            if player.position.y > 20:
+                player.position.y = 0
     
-    def detect_block_collision(self, entity, prev_position: Vec2) -> Vec2:
+    def _detect_block_collision(self, entity, prev_position: Vec2) -> Vec2:
         """
         Detection des collisions d'une entité avec les blocks.
         :param entity: L'entité.
@@ -122,22 +104,3 @@ class LevelScene(Scene):
         )
 
         return resolve_vector - delta_position
-
-    def update(self) -> None:
-        self.player.update()
-
-        for entity in self.entities:
-            entity.update()
-    
-    def render(self) -> None:
-        self.camera.begin_render()
-        
-        for block in self.level_map.near_blocks(self.camera.position):
-            block.draw(self.camera)
-            
-        self.player.draw(self.camera)
-        
-        for entity in self.entities:
-            entity.draw(self.camera)
-            
-        self.camera.end_render()

@@ -9,7 +9,7 @@ SceneId = enum.Enum("SceneId", [
     "HOST_OR_CLIENT_MENU",
     "HUB_CLIENT_MENU",
     "HUB_HOST_MENU",
-    "LEVEL",
+    "SINGLE_LEVEL",
     "MAIN_MENU",
     "SCAN_MENU",
 ])

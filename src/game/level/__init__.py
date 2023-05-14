@@ -1,3 +1,3 @@
 """Module des niveaux."""
 
-from .level import LevelScene
+from .single_level import SingleLevelScene

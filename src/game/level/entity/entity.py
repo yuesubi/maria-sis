@@ -39,13 +39,6 @@ class Entity(ABC):
         """
 
     @abstractmethod
-    def update(self) -> None:
-        """
-        Méthode appelée à chaque frame. La gestion des entrées doit se faire
-        ici. (Doit être implémentée par la classe enfant)
-        """
-
-    @abstractmethod
     def fixed_update(self) -> None:
         """
         Méthode appelée à intervale régulier et un nombre de fois fixe par

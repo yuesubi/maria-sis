@@ -5,7 +5,7 @@ import pyray as pr
 from typing import Any, cast
 
 from ..constants import SCALE, UNIT
-from .level import LevelScene
+from .level import SingleLevelScene
 from .managers import CreateSceneCallBack, Scene, SceneId, Time
 from .menus import *
 
@@ -18,7 +18,7 @@ SCENE_MAP: dict[SceneId, type[Scene]] = {
     SceneId.HOST_OR_CLIENT_MENU: HostOrClientMenuScene,
     SceneId.HUB_CLIENT_MENU: HubClientMenuScene,
     SceneId.HUB_HOST_MENU: HubHostMenuScene,
-    SceneId.LEVEL: LevelScene,
+    SceneId.SINGLE_LEVEL: SingleLevelScene,
     SceneId.MAIN_MENU: MainMenuScene,
     SceneId.SCAN_MENU: ScanMenuScene,
 }

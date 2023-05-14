@@ -7,7 +7,6 @@ from ....utils import Vec2
 from ...assets import MARIA_FRAMES, MARIA_SPRITE_SHEET
 from ...managers import Time
 from ..camera import Camera
-from ..collider import RectCollider
 from .entity import Entity
 
 
@@ -17,6 +16,16 @@ from .entity import Entity
 
 class Player(Entity):
     """Exemple d'une implémentation du Joueur."""
+
+    class Inputs:
+        """Les entrés du joueur."""
+
+        def __init__(self) -> None:
+            self.pressing_left: bool = False
+            self.pressing_right: bool = False
+            self.pressing_jump: bool = False
+            # self.pressing_down: bool = False
+            # self.pressing_fire: bool = False
 
     def __init__(self) -> None:
         """Constructeur."""
@@ -44,16 +53,16 @@ class Player(Entity):
         self.velocity += Vec2(0, 15) * Time.fixed_delta_time
         self.position += self.velocity * Time.fixed_delta_time
 
-    def update(self) -> None:
+    def update(self, inputs: Inputs) -> None:
         x_mov = 0.0
-        if pr.is_key_down(pr.KeyboardKey.KEY_RIGHT):
+        if inputs.pressing_right:
             x_mov += 4
-        if pr.is_key_down(pr.KeyboardKey.KEY_LEFT):
+        if inputs.pressing_left:
             x_mov -= 4
         self.velocity.x = x_mov
         
-        if pr.is_key_pressed(pr.KeyboardKey.KEY_SPACE):
-            self.velocity.y = -10
+        if inputs.pressing_jump:
+            self.velocity.y = -12
     
     def draw(self, camera: Camera) -> None:
         # Dessiner l'image du joueur
