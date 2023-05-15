@@ -40,6 +40,7 @@ class HostMultipleLevelScene(Scene):
         self.socket: socket.socket = \
             socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.bind((SELF_IP, GAME_SERVER_PORT))
+        self.socket.setblocking(False)
     
     def fixed_update(self) -> None:
         self.level.fixed_update()
@@ -67,26 +68,38 @@ class HostMultipleLevelScene(Scene):
         inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
         self.player.update(inputs)
         
-        data = "@"
-        while len(data) > 0:
-            data, addr = self.socket.recvfrom(PACKET_SIZE)
-            ip = addr[0]
+        all_received = False
+        while not all_received:
+            try:
+                data, addr = self.socket.recvfrom(PACKET_SIZE)
 
-            inputs = Player.Inputs()
-            inputs.pressing_left = False
-            inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
-            inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
+                ip = addr[0]
+                msg = data.rstrip(b'\0').decode()
 
-            self.inputs[ip] = inputs
+                # TODO: On all packets, add a number, in case the packets are
+                #       received in a different order. So that you know if it's
+                #       the most up to date packet.
+
+                inputs = Player.Inputs()
+                inputs.pressing_left = msg[0] == '1'
+                inputs.pressing_right = msg[1] == '1'
+                inputs.pressing_jump = msg[2] == '1'
+                self.inputs[ip] = inputs
+            
+            except BlockingIOError:
+                all_received = True
 
         for client_ip in self.client_ips:
-            self.players[client_ip].update(self.inputs[client_ip])
+            player = self.players[client_ip]
+            player.update(self.inputs[client_ip])
 
-            data = ""
-            self.socket.sendto(
-                data + b' ' * (PACKET_SIZE - len(data)),
-                (client_ip, GAME_SERVER_PORT)
-            )
+            data = (
+                f"{client_ip}|{player.position.x}|{player.position.y}"
+            ).encode()
+            data += b'\0' * (PACKET_SIZE - len(data))
+
+            for dest_ip in self.client_ips:
+                self.socket.sendto(data, (dest_ip, GAME_CLIENT_PORT))
     
     def render(self) -> None:
         self.camera.begin_render()
