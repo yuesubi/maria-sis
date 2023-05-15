@@ -13,23 +13,31 @@ from .level import Level
 class ClientMultipleLevelScene(Scene):
     """L'hôte d'un niveau multijoueur."""
 
-    def __init__(self, server_ip: str) -> None:
-        """Constructeur."""
+    def __init__(self, server_ip: str, clients_ips: set[str]) -> None:
+        """
+        Constructeur.
+        :param server_ip: L'ip du server qui hôte le jeu.
+        :param clients_ips: Les ip des clients.
+        """
         super().__init__()
 
         map_path = os.path.join(os.path.dirname(__file__),
             "..", "..", "..", "maps", "sample.png")
-        self.player = Player()
+        
+        self.players: dict[str, Player] = { ip: Player() for ip in clients_ips }
+        self.player: Player = self.players[SELF_IP]
 
-        self.level: Level = Level(set([self.player]), map_path)
+        self.level: Level = Level(set(self.players.values()), map_path)
         
         self.camera: Camera = Camera()
         self.camera.position = self.level.level_map.spawn_point.copy
 
         self.server_ip: str = server_ip
+
         self.socket: socket.socket = \
             socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.bind((SELF_IP, GAME_CLIENT_PORT))
+        self.socket.setblocking(False)
     
     def fixed_update(self) -> None:
         self.level.fixed_update()
@@ -60,13 +68,27 @@ class ClientMultipleLevelScene(Scene):
             '1' if inputs.pressing_right else '0' + \
             '1' if inputs.pressing_jump else '0' + "0"
         data = msg.encode()
+        data += b'\0' * (PACKET_SIZE - len(data))
 
-        self.socket.sendto(
-            data + b' ' * (PACKET_SIZE - len(data)),
-            (self.server_ip, GAME_SERVER_PORT)
-        )
+        self.socket.sendto(data, (self.server_ip, GAME_SERVER_PORT))
 
-        self.player.update(inputs)
+        # Pump packets
+        all_received = False
+        while not all_received:
+            try:
+                data, _ = self.socket.recvfrom(PACKET_SIZE)
+
+                # TODO: Check if the message actually comes from the sever, and
+                #       not some random computer.
+
+                player_pos = data.rstrip(b'\0').decode().split(':')
+
+                player = self.players[player_pos[0]]
+                player.position.x = float(player_pos[1])
+                player.position.y = float(player_pos[2])
+            
+            except BlockingIOError:
+                all_received = True
     
     def render(self) -> None:
         self.camera.begin_render()
