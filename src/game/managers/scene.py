@@ -5,7 +5,9 @@ from ...utils import ClassGetter, Stack
 
 
 SceneId = enum.Enum("SceneId", [
+    "CLIENT_MULTIPLE_LEVEL",
     "CONNECT_METHOD_MENU",
+    "HOST_MULTIPLE_LEVEL",
     "HOST_OR_CLIENT_MENU",
     "HUB_CLIENT_MENU",
     "HUB_HOST_MENU",

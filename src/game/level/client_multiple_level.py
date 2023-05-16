@@ -40,8 +40,6 @@ class ClientMultipleLevelScene(Scene):
         self.socket.setblocking(False)
     
     def fixed_update(self) -> None:
-        self.level.fixed_update()
-        
         self.camera.position = self.camera.position.lerp(
             self.player.position + CAMERA_OFFSET,
             Time.fixed_delta_time * 4
