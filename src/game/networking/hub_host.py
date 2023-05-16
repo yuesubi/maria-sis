@@ -12,6 +12,8 @@ class HubHost:
         self._should_stop: bool = False
         self._threads: set[threading.Thread] = set()
 
+        self._should_send_play_msg: bool = False
+
     def start(self) -> None:
         """Commencer à écouter."""
         print(f"[HUB HOST] Starting")
@@ -20,6 +22,10 @@ class HubHost:
         listen_thread = threading.Thread(target=self._listen)
         listen_thread.start()
         self._threads.add(listen_thread)
+    
+    def send_play_msg(self) -> None:
+        """Dire au clients qu'il faut commencer la partie."""
+        self._should_send_play_msg = True
 
     def stop(self) -> None:
         """Arrêter d'écouter."""
@@ -62,18 +68,24 @@ class HubHost:
         :param client_ip: L'adresse ip du client.
         """
         print(f"[HUB HOST] {client_ip} connected")
-
         client.settimeout(TIMEOUT)
 
+        has_sent_play_msg = False
+
         try:
-            while not self._should_stop:
+            while not self._should_stop and \
+                    (has_sent_play_msg == self._should_send_play_msg):
+                
                 try:
                     msg = client.recv(PACKET_SIZE).rstrip(b'\0').decode()
                 except TimeoutError:
                     pass
 
-                msg = "This is a message from the server".encode()
-                client.send(msg + b'\0' * (PACKET_SIZE - len(msg)))
+                if (has_sent_play_msg != self._should_send_play_msg):
+                    msg = "!play".encode()
+                    client.send(msg + b'\0' * (PACKET_SIZE - len(msg)))
+
+                    has_sent_play_msg = True
         
         except (BrokenPipeError, ConnectionResetError):
             print(f"[HUB HOST] {client_ip} disconnected")
