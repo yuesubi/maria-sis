@@ -9,9 +9,12 @@ class HubHost:
 
     def __init__(self) -> None:
         """Constructeur."""
-        self._should_stop: bool = False
         self._threads: set[threading.Thread] = set()
 
+        self._ips: set[str] = set()
+        self._ips_lock: threading.Lock = threading.Lock()
+
+        self._should_stop: bool = False
         self._should_send_play_msg: bool = False
 
     def start(self) -> None:
@@ -70,6 +73,10 @@ class HubHost:
         print(f"[HUB HOST] {client_ip} connected")
         client.settimeout(TIMEOUT)
 
+        self._ips_lock.acquire()
+        self._ips.add(client_ip)
+        self._ips_lock.release()
+
         has_sent_play_msg = False
 
         try:
@@ -81,14 +88,25 @@ class HubHost:
                 except TimeoutError:
                     pass
 
+                msg = str()
                 if (has_sent_play_msg != self._should_send_play_msg):
                     msg = "!play".encode()
-                    client.send(msg + b'\0' * (PACKET_SIZE - len(msg)))
-
                     has_sent_play_msg = True
+                else:
+                    self._ips_lock.acquire()
+                    msg = "!ips|" + '|'.join(self._ips)
+                    self._ips_lock.release()
+                
+                msg += b'\0' * (PACKET_SIZE - len(msg))
+                client.send(msg)
         
         except (BrokenPipeError, ConnectionResetError):
             print(f"[HUB HOST] {client_ip} disconnected")
+
+        if not self._should_send_play_msg:
+            self._ips_lock.acquire()
+            self._ips.remove(client_ip)
+            self._ips_lock.release()
         
         try:
             self._threads.remove(threading.current_thread())

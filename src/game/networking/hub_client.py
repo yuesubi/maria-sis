@@ -13,10 +13,11 @@ class HubClient:
         """Constructeur."""
 
         self._server_ip: str = server_ip
+        self._other_clients_ips: set[str] = set()
         
         self.conn_cbk: Callable[[], None] | None = None
         self.dconn_cbk: Callable[[], None] | None = None
-        self.start_cbk: Callable[[], None] | None = None
+        self.play_cbk: Callable[[], None] | None = None
 
         self._loop_threat: threading.Thread | None = None
         self._should_stop: bool = True
@@ -55,8 +56,14 @@ class HubClient:
                 msg = sock.recv(PACKET_SIZE).rstrip(b'\0').decode()
                 print(f"[HUB CLIENT] Recv \"{msg}\"")
 
+                info = msg.split('|')
+
                 if msg == "":
                     self._should_stop = True
+                elif info[0] == "!play":
+                    self.play_cbk()
+                elif info[0] == "!ips":
+                    self._other_clients_ips = set(info[1:])
             
             except TimeoutError:
                 pass
