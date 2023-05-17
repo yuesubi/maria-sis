@@ -62,9 +62,9 @@ class ClientMultipleLevelScene(Scene):
         inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
         inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
 
-        msg = '1' if inputs.pressing_left else '0' + \
-            '1' if inputs.pressing_right else '0' + \
-            '1' if inputs.pressing_jump else '0' + "0"
+        msg = ('1' if inputs.pressing_left else '0') + \
+            ('1' if inputs.pressing_right else '0') + \
+            ('1' if inputs.pressing_jump else '0') + "0"
         data = msg.encode()
         data += b'\0' * (PACKET_SIZE - len(data))
 
@@ -79,7 +79,7 @@ class ClientMultipleLevelScene(Scene):
                 # TODO: Check if the message actually comes from the sever, and
                 #       not some random computer.
 
-                player_pos = data.rstrip(b'\0').decode().split(':')
+                player_pos = data.rstrip(b'\0').decode().split('|')
 
                 player = self.players[player_pos[0]]
                 player.position.x = float(player_pos[1])

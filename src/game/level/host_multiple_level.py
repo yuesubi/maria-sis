@@ -21,9 +21,6 @@ class HostMultipleLevelScene(Scene):
             "..", "..", "..", "maps", "sample.png")
         self.player = Player()
         
-        self.camera: Camera = Camera()
-        self.camera.position = self.level.level_map.spawn_point.copy
-
         self.client_ips: set[str] = client_ips
         self.players: dict[str, Player] = {
             ip: Player() for ip in self.client_ips
@@ -33,9 +30,12 @@ class HostMultipleLevelScene(Scene):
         }
 
         self.player: Player = Player()
-        self.players[SELF_IP] = self.players
+        self.players[SELF_IP] = self.player
 
         self.level: Level = Level(set(self.players.values()), map_path)
+
+        self.camera: Camera = Camera()
+        self.camera.position = self.level.level_map.spawn_point.copy
 
         self.socket: socket.socket = \
             socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -80,11 +80,12 @@ class HostMultipleLevelScene(Scene):
                 #       received in a different order. So that you know if it's
                 #       the most up to date packet.
 
-                inputs = Player.Inputs()
-                inputs.pressing_left = msg[0] == '1'
-                inputs.pressing_right = msg[1] == '1'
-                inputs.pressing_jump = msg[2] == '1'
-                self.inputs[ip] = inputs
+                if len(msg) > 3:
+                    inputs = Player.Inputs()
+                    inputs.pressing_left = msg[0] == '1'
+                    inputs.pressing_right = msg[1] == '1'
+                    inputs.pressing_jump = msg[2] == '1'
+                    self.inputs[ip] = inputs
             
             except BlockingIOError:
                 all_received = True

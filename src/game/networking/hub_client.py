@@ -14,6 +14,7 @@ class HubClient:
 
         self._server_ip: str = server_ip
         self._other_clients_ips: set[str] = set()
+        self._other_clients_ips_lock: threading.Lock = threading.Lock()
         
         self.conn_cbk: Callable[[], None] | None = None
         self.dconn_cbk: Callable[[], None] | None = None
@@ -21,6 +22,14 @@ class HubClient:
 
         self._loop_threat: threading.Thread | None = None
         self._should_stop: bool = True
+    
+    @property
+    def other_clients_ips(self) -> set[str]:
+        """Assesseur des ips """
+        self._other_clients_ips_lock.acquire()
+        other_clients_ips = self._other_clients_ips.copy()
+        self._other_clients_ips_lock.release()
+        return other_clients_ips
 
     def start(self) -> None:
         """Commencer à scanner le réseau."""
@@ -63,7 +72,9 @@ class HubClient:
                 elif info[0] == "!play":
                     self.play_cbk()
                 elif info[0] == "!ips":
+                    self._other_clients_ips_lock.acquire()
                     self._other_clients_ips = set(info[1:])
+                    self._other_clients_ips_lock.release()
             
             except TimeoutError:
                 pass

@@ -53,7 +53,7 @@ class HubHostMenuScene(Scene):
                     "JOUER", pr.Color(0, 0, 0, 255), 16,
                     background_color=pr.Color(200, 100, 200, 255),
                     border_color=pr.Color(255, 100, 255, 255), border_width=3,
-                    command=lambda: None
+                    command=self.play_button_callback
                 )
             ]
         )
@@ -68,3 +68,11 @@ class HubHostMenuScene(Scene):
     def render(self) -> None:
         self.main_frame.size.xy = pr.get_screen_width(), pr.get_screen_height()
         self.main_frame.render()
+    
+    def play_button_callback(self) -> None:
+        """La fonction appelée quand le bouton de jeu est cliqué."""
+        self.hub_host.send_play_msg()
+        Scene.switch_scene(
+            SceneId.HOST_MULTIPLE_LEVEL,
+            self.hub_host.ips
+        )
