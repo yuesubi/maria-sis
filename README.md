@@ -35,3 +35,16 @@ python maria-sis.py
 
 ### Classes
 ![UML diagram of the classes](/res/schemas/classes.svg)
+
+
+## TODO
+- [ ] Be able to finish the level
+- [ ] Dying being a thing
+- [ ] Pause menu to exit
+- [ ] Create ennemies
+- [ ] Have multiple kind of blocks
+- [ ] Package count to be sure that the most recent inputs are being used
+- [ ] Menus indicate who are in the hub
+- [ ] Having multiple lives
+- [ ] Solve buggy collisions
+- [ ] Other characters for the multiplayer

@@ -76,7 +76,9 @@ python maria-sis.py
 
 
 ## A faire
-
+- [ ] Pouvoir finir le niveau
+- [ ] Pouvoir mourir
+- [ ] Menu de pause
 - [ ] Créer des ennemis :
     * Les ennemis sont des `Entity` (ie: ils hérite de cette classe)
         * La classe d'un ennemi doit avoir :
@@ -97,6 +99,13 @@ python maria-sis.py
             `Entity` pas besoin de le définir soi-même. 
     * Pour tester une entité, il faut ajouter une instance de l'ennemi dans la
         liste `self.entities` dans `LevelScene.__init__()`
+- [ ] Avoir plusieurs types de blocks
+- [ ] Compteur pour les packets, pour être sûr d'utiliser les entrés les plus
+    récentes
+- [ ] Menu qui indique les personnes dans la salle d'attente
+- [ ] Avoir plusieurs vies
+- [ ] Résoudre les bugs de collision
+- [ ] Avoir d'autres personnages pour les multijoueur
 
 
 ## Progression
@@ -143,3 +152,4 @@ python maria-sis.py
     de bugs de collision.
 * 2023/05/14 1h00 Separation de la Scène de niveau et du niveau, pour faciliter
     la création de niveaux multijoueurs.
+* 2023/05/17 3h00 Ajout du multijoueur.
