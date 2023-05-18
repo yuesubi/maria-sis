@@ -24,8 +24,12 @@ class ClientMultipleLevelScene(Scene):
         map_path = os.path.join(os.path.dirname(__file__),
             "..", "..", "..", "maps", "sample.png")
         
-        self.players: dict[str, Player] = { ip: Player() for ip in clients_ips }
-        self.player: Player = self.players[SELF_IP]
+        self.players: dict[str, Player] = {
+            f"{ip}:{GAME_CLIENT_PORT}": Player() for ip in clients_ips }
+        self.players[f"{server_ip}:{GAME_SERVER_PORT}"] = Player()
+
+        self.own_ip: str = f"{SELF_IP}:{GAME_CLIENT_PORT}"
+        self.player: Player = self.players[self.own_ip]
 
         self.level: Level = Level(set(self.players.values()), map_path)
         
@@ -80,8 +84,9 @@ class ClientMultipleLevelScene(Scene):
                 #       not some random computer.
 
                 player_pos = data.rstrip(b'\0').decode().split('|')
+                ip = player_pos[0]
 
-                player = self.players[player_pos[0]]
+                player = self.players[ip]
                 player.position.x = float(player_pos[1])
                 player.position.y = float(player_pos[2])
             

@@ -1,3 +1,4 @@
+import itertools
 import os
 import pyray as pr
 import socket
@@ -19,18 +20,23 @@ class HostMultipleLevelScene(Scene):
 
         map_path = os.path.join(os.path.dirname(__file__),
             "..", "..", "..", "maps", "sample.png")
-        self.player = Player()
         
-        self.client_ips: set[str] = client_ips
+        self.client_ips: set[str] = set(map(
+            lambda ip: f"{ip}:{GAME_CLIENT_PORT}",
+            client_ips
+        ))
+        self.all_ips: set[str] = self.client_ips.copy()
+        self.own_ip: str = f"{SELF_IP}:{GAME_SERVER_PORT}"
+        self.all_ips.add(self.own_ip)
+
         self.players: dict[str, Player] = {
-            ip: Player() for ip in self.client_ips
+            ip: Player() for ip in self.all_ips
         }
         self.inputs: dict[str, Player.Inputs] = {
-            ip: Player.Inputs() for ip in self.client_ips
+            ip: Player.Inputs() for ip in self.all_ips
         }
 
-        self.player: Player = Player()
-        self.players[SELF_IP] = self.player
+        self.player: Player = self.players[self.own_ip]
 
         self.level: Level = Level(set(self.players.values()), map_path)
 
@@ -66,14 +72,14 @@ class HostMultipleLevelScene(Scene):
         inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
         inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
         inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
-        self.player.update(inputs)
+        self.inputs[self.own_ip] = inputs
         
         all_received = False
         while not all_received:
             try:
                 data, addr = self.socket.recvfrom(PACKET_SIZE)
 
-                ip = addr[0]
+                ip = f"{addr[0]}:{GAME_CLIENT_PORT}"
                 msg = data.rstrip(b'\0').decode()
 
                 # TODO: On all packets, add a number, in case the packets are
@@ -90,17 +96,18 @@ class HostMultipleLevelScene(Scene):
             except BlockingIOError:
                 all_received = True
 
-        for client_ip in self.client_ips:
-            player = self.players[client_ip]
-            player.update(self.inputs[client_ip])
+        for ip in self.all_ips:
+            player = self.players[ip]
+            player.update(self.inputs[ip])
 
             data = (
-                f"{client_ip}|{player.position.x}|{player.position.y}"
+                f"{ip}|{player.position.x}|{player.position.y}"
             ).encode()
             data += b'\0' * (PACKET_SIZE - len(data))
 
             for dest_ip in self.client_ips:
-                self.socket.sendto(data, (dest_ip, GAME_CLIENT_PORT))
+                real_dest_ip = dest_ip.split(':')[0]
+                self.socket.sendto(data, (real_dest_ip, GAME_CLIENT_PORT))
     
     def render(self) -> None:
         self.camera.begin_render()

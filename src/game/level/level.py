@@ -23,7 +23,7 @@ class Level(Scene):
 
         self.players: set[Player] = players
         for player in self.players:
-            player.position = spawn_point
+            player.position = spawn_point.copy
 
         self.entities: set[Entity] = set(self.players)
     
