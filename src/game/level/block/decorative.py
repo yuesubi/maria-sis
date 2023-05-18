@@ -14,18 +14,18 @@ from .block import Block
 class DecorativeBlock(Block):
     """Classe d'un exemple de bloc décoratif."""
 
-    def __init__(self, position: Vec2) -> None:
+    def __init__(self, position: Vec2, block_id: int) -> None:
         """
         Constructeur.
         :param position: La position du bloc.
+        :param block_id: L'id du block.
         """
         super().__init__(
             position
         )
 
         self.texture: pr.Texture = pr.load_texture(OVER_WORLD_TILE_SET)
-        # TODO: Prendre en argument l'image du bloc et la stocker pour pouvoir
-        # la dessiner
+        self.block_id = block_id
     
     @property
     def rect_collider(self) -> RectCollider:
@@ -36,5 +36,5 @@ class DecorativeBlock(Block):
         camera.draw_texture_part(
             self.texture,
             self.position,
-            OVER_WORLD_TILES[0]
+            OVER_WORLD_TILES[self.block_id]
         )

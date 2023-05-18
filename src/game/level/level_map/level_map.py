@@ -19,7 +19,16 @@ def color_hash(color: pr.Color) -> int:
 
 
 BLOCK_OF_COLOR: dict[pr.Color, type[Block]] = {
-    color_hash(pr.Color(0, 0, 0, 255)): DecorativeBlock
+    color_hash(pr.Color(0, 0, 0, 255)): (lambda pos: DecorativeBlock(pos, 0)),
+    color_hash(pr.Color(20, 0, 0, 255)): (lambda pos: DecorativeBlock(pos, 1)),
+    color_hash(pr.Color(40, 0, 0, 255)): (lambda pos: DecorativeBlock(pos, 2)),
+    color_hash(pr.Color(60, 0, 0, 255)): (lambda pos: DecorativeBlock(pos, 3)),
+    color_hash(pr.Color(80, 0, 0, 255)): (lambda pos: DecorativeBlock(pos, 4)),
+
+    color_hash(pr.Color(0, 20, 0, 255)): (lambda pos: DecorativeBlock(pos, 5)),
+    color_hash(pr.Color(0, 40, 0, 255)): (lambda pos: DecorativeBlock(pos, 6)),
+    color_hash(pr.Color(0, 60, 0, 255)): (lambda pos: DecorativeBlock(pos, 7)),
+    color_hash(pr.Color(0, 80, 0, 255)): (lambda pos: DecorativeBlock(pos, 8)),
 }
 
 
