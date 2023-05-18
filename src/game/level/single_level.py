@@ -1,15 +1,11 @@
 import os
 import pyray as pr
 
-from ...constants import EPSILON
-from ...utils import Vec2
+from ...constants import CAMERA_OFFSET
 from ..managers import Time, Scene
 from .camera import Camera
-from .entity import Entity, Player
+from .entity import Player
 from .level import Level
-
-
-CAMERA_OFFSET: Vec2 = Vec2(0, -2)
 
 
 class SingleLevelScene(Scene):

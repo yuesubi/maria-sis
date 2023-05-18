@@ -19,9 +19,12 @@ class HubClientMenuScene(Scene):
         super().__init__()
 
         self.hub_client: HubClient = HubClient(server_ip)
+        self.hub_client.play_cbk = self.play_callback
         self.hub_client.start()
 
         self.server_ip: str = server_ip
+
+        self.should_start: bool = False
 
         # Interface graphique
         self.main_frame: Frame = Frame(
@@ -57,6 +60,17 @@ class HubClientMenuScene(Scene):
     def update(self) -> None:
         self.main_frame.update()
 
+        if self.should_start:
+            Scene.switch_scene(
+                SceneId.CLIENT_MULTIPLE_LEVEL,
+                self.server_ip,
+                self.hub_client.other_clients_ips
+            )
+
     def render(self) -> None:
         self.main_frame.size.xy = pr.get_screen_width(), pr.get_screen_height()
         self.main_frame.render()
+    
+    def play_callback(self) -> None:
+        """Fonction appelé pour commencer à jouer."""
+        self.should_start = True
