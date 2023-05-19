@@ -4,13 +4,10 @@ import pyray as pr
 
 from typing import Any, cast
 
-from ..constants import SCALE, UNIT
+from ..constants import *
 from .level import *
 from .managers import CreateSceneCallBack, Scene, SceneId, Time
 from .menus import *
-
-
-WIDTH, HEIGHT = 16, 13
 
 
 SCENE_MAP: dict[SceneId, type[Scene]] = {
@@ -32,7 +29,8 @@ class Game:
     def __init__(self) -> None:
         """Constructeur."""
         pr.init_window(
-            int(WIDTH * UNIT * SCALE), int(HEIGHT * UNIT * SCALE),
+            int(WIDTH_IN_BLOCKS * UNIT * SCALE),
+            int(HEIGHT_IN_BLOCKS * UNIT * SCALE),
             "Maria Sis"
         )
         pr.set_trace_log_level(pr.TraceLogLevel.LOG_ERROR)

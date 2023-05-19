@@ -47,7 +47,7 @@ class LevelMap:
 
         map_img = pr.load_image(img_path)
         level_map.top_left.xy = 0, 0
-        level_map.bottom_right = Vec2(map_img.width, map_img.height) * UNIT
+        level_map.bottom_right = Vec2(map_img.width, map_img.height)
 
         for y in range(map_img.height):
             for x in range(map_img.width):
