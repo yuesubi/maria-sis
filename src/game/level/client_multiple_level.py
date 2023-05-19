@@ -51,13 +51,13 @@ class ClientMultipleLevelScene(Scene):
 
         self.camera.position.x = min(max(
             self.camera.position.x,
-            self.level.level_map.top_left.x),
-            self.level.level_map.bottom_right.x
+            self.level.level_map.top_left.x + WIDTH_IN_BLOCKS/2 - 0.5),
+            self.level.level_map.bottom_right.x - WIDTH_IN_BLOCKS/2 - 0.5
         )
         self.camera.position.y = min(max(
             self.camera.position.y,
-            self.level.level_map.top_left.y),
-            self.level.level_map.bottom_right.y
+            self.level.level_map.top_left.y + HEIGHT_IN_BLOCKS/2 - 0.5),
+            self.level.level_map.bottom_right.y - HEIGHT_IN_BLOCKS/2 - 0.5
         )
     
     def update(self) -> None:

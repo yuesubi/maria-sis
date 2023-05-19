@@ -49,22 +49,28 @@ class HostMultipleLevelScene(Scene):
         self.socket.setblocking(False)
     
     def fixed_update(self) -> None:
-        self.level.fixed_update()
-        
-        self.camera.position = self.camera.position.lerp(
-            self.player.position + CAMERA_OFFSET,
-            Time.fixed_delta_time * 4
-        )
+        if self.level.winner is None:
+            self.level.fixed_update()
+            
+            self.camera.position = self.camera.position.lerp(
+                self.player.position + CAMERA_OFFSET,
+                Time.fixed_delta_time * 4
+            )
+        else:
+            self.camera.position = self.camera.position.lerp(
+                self.level.winner.position + CAMERA_OFFSET,
+                Time.fixed_delta_time
+            )
 
         self.camera.position.x = min(max(
             self.camera.position.x,
-            self.level.level_map.top_left.x),
-            self.level.level_map.bottom_right.x
+            self.level.level_map.top_left.x + WIDTH_IN_BLOCKS/2 - 0.5),
+            self.level.level_map.bottom_right.x - WIDTH_IN_BLOCKS/2 - 0.5
         )
         self.camera.position.y = min(max(
             self.camera.position.y,
-            self.level.level_map.top_left.y),
-            self.level.level_map.bottom_right.y
+            self.level.level_map.top_left.y + HEIGHT_IN_BLOCKS/2 - 0.5),
+            self.level.level_map.bottom_right.y - HEIGHT_IN_BLOCKS/2 - 0.5
         )
     
     def update(self) -> None:

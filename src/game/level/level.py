@@ -1,6 +1,6 @@
 import os
 
-from ...constants import EPSILON
+from ...constants import *
 from ...utils import Vec2
 from ..managers import Scene
 from .entity import Entity, Player
@@ -19,12 +19,13 @@ class Level(Scene):
         super().__init__()
 
         self.level_map = LevelMap.create_from_file(map_path)
-        spawn_point = self.level_map.spawn_point + Vec2(0, -0.5)
+        spawn_point = self.level_map.spawn_point + Vec2(0, 0.0)
 
         self.players: set[Player] = players
         for player in self.players:
             player.position = spawn_point.copy
-
+        
+        self.winner: Player | None = None
         self.entities: set[Entity] = set(self.players)
     
     def fixed_update(self) -> None:
@@ -37,8 +38,11 @@ class Level(Scene):
                 entity.on_collision(resolve_vec)
 
         for player in self.players:
-            if player.position.y > 20:
-                player.position.y = 0
+            if player.position.y > self.level_map.bottom_right.y + 4:
+                player.position = self.level_map.spawn_point + Vec2(0, 0)
+                player.velocity.xy = 0.0, 0.0
+            if player.position.x > self.level_map.bottom_right.x - 14:
+                self.winner = player
     
     def _detect_block_collision(self, entity, prev_position: Vec2) -> Vec2:
         """

@@ -63,9 +63,9 @@ class Player(Entity):
     def update(self, inputs: Inputs) -> None:
         x_mov = 0.0
         if inputs.pressing_right:
-            x_mov += 4
+            x_mov += 5
         if inputs.pressing_left:
-            x_mov -= 4
+            x_mov -= 5
         self.velocity.x = x_mov
         
         if inputs.pressing_jump and self.can_jump:

@@ -25,7 +25,8 @@ class SingleLevelScene(Scene):
         self.camera.position = self.level.level_map.spawn_point.copy
     
     def fixed_update(self) -> None:
-        self.level.fixed_update()
+        if self.level.winner is None:
+            self.level.fixed_update()
         
         self.camera.position = self.camera.position.lerp(
             self.player.position + CAMERA_OFFSET,
