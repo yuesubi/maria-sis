@@ -19,14 +19,14 @@ class ClientMultipleLevelScene(LevelScene):
         players = { f"{ip}:{GAME_CLIENT_PORT}": Player() for ip in clients_ips }
         players[f"{server_ip}:{GAME_SERVER_PORT}"] = Player()
 
-        own_ip = f"{SELF_IP}:{GAME_CLIENT_PORT}"
-        main_player = players[own_ip]
+        own_id = f"{SELF_IP}:{GAME_CLIENT_PORT}"
+        main_player = players[own_id]
 
         super().__init__(set(players.values()), main_player)
 
         self.players: dict[str, Player] = players
 
-        self.own_ip: str = own_ip
+        self.own_id: str = own_id
         self.server_ip: str = server_ip
 
         self.socket: socket.socket = \
@@ -61,9 +61,9 @@ class ClientMultipleLevelScene(LevelScene):
                 #       not some random computer.
 
                 player_pos = data.rstrip(b'\0').decode().split('|')
-                ip = player_pos[0]
+                player_id = player_pos[0]
 
-                player = self.players[ip]
+                player = self.players[player_id]
                 player.position.x = float(player_pos[1])
                 player.position.y = float(player_pos[2])
             
