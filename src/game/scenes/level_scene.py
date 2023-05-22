@@ -27,6 +27,8 @@ class LevelScene(Scene):
         
         self.camera: Camera = Camera()
         self.camera.position = self.level.level_map.spawn_point.copy
+
+        self.pause_menu: int = 0
     
     def fixed_update(self, should_update_level=True) -> None:
         if self.level.winner is None and should_update_level:
