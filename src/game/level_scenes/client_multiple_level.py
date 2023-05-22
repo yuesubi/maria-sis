@@ -1,16 +1,13 @@
-import os
 import pyray as pr
 import socket
 
 from ...constants import *
-from ..managers import Time, Scene
+from ..level import Player
 from ..networking import SELF_IP
-from .camera import Camera
-from .entity import Player
-from .level import Level
+from .level_scene import LevelScene
 
 
-class ClientMultipleLevelScene(Scene):
+class ClientMultipleLevelScene(LevelScene):
     """L'hôte d'un niveau multijoueur."""
 
     def __init__(self, server_ip: str, clients_ips: set[str]) -> None:
@@ -19,23 +16,17 @@ class ClientMultipleLevelScene(Scene):
         :param server_ip: L'ip du server qui hôte le jeu.
         :param clients_ips: Les ip des clients.
         """
-        super().__init__()
+        players = { f"{ip}:{GAME_CLIENT_PORT}": Player() for ip in clients_ips }
+        players[f"{server_ip}:{GAME_SERVER_PORT}"] = Player()
 
-        map_path = os.path.join(os.path.dirname(__file__),
-            "..", "..", "..", "maps", "sample.png")
-        
-        self.players: dict[str, Player] = {
-            f"{ip}:{GAME_CLIENT_PORT}": Player() for ip in clients_ips }
-        self.players[f"{server_ip}:{GAME_SERVER_PORT}"] = Player()
+        own_ip = f"{SELF_IP}:{GAME_CLIENT_PORT}"
+        main_player = players[own_ip]
 
-        self.own_ip: str = f"{SELF_IP}:{GAME_CLIENT_PORT}"
-        self.player: Player = self.players[self.own_ip]
+        super().__init__(set(players.values()), main_player)
 
-        self.level: Level = Level(set(self.players.values()), map_path)
-        
-        self.camera: Camera = Camera()
-        self.camera.position = self.level.level_map.spawn_point.copy
+        self.players: dict[str, Player] = players
 
+        self.own_ip: str = own_ip
         self.server_ip: str = server_ip
 
         self.socket: socket.socket = \
@@ -44,22 +35,8 @@ class ClientMultipleLevelScene(Scene):
         self.socket.setblocking(False)
     
     def fixed_update(self) -> None:
-        self.camera.position = self.camera.position.lerp(
-            self.player.position + CAMERA_OFFSET,
-            Time.fixed_delta_time * 4
-        )
+        return super().fixed_update(should_update_level=False)
 
-        self.camera.position.x = min(max(
-            self.camera.position.x,
-            self.level.level_map.top_left.x + WIDTH_IN_BLOCKS/2 - 0.5),
-            self.level.level_map.bottom_right.x - WIDTH_IN_BLOCKS/2 - 0.5
-        )
-        self.camera.position.y = min(max(
-            self.camera.position.y,
-            self.level.level_map.top_left.y + HEIGHT_IN_BLOCKS/2 - 0.5),
-            self.level.level_map.bottom_right.y - HEIGHT_IN_BLOCKS/2 - 0.5
-        )
-    
     def update(self) -> None:
         inputs = Player.Inputs()
         inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
@@ -92,14 +69,3 @@ class ClientMultipleLevelScene(Scene):
             
             except BlockingIOError:
                 all_received = True
-    
-    def render(self) -> None:
-        self.camera.begin_render()
-        
-        for block in self.level.level_map.near_blocks(self.camera.position):
-            block.draw(self.camera)
-            
-        for entity in self.level.entities:
-            entity.draw(self.camera)
-            
-        self.camera.end_render()

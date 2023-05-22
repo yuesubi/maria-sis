@@ -5,7 +5,7 @@ import pyray as pr
 from typing import Any, cast
 
 from ..constants import *
-from .level import *
+from .level_scenes import *
 from .managers import CreateSceneCallBack, Scene, SceneId, Time
 from .menus import *
 

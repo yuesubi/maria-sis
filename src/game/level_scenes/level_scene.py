@@ -1,35 +1,39 @@
+import abc
 import os
 import pyray as pr
 
 from ...constants import *
 from ..managers import Time, Scene
-from .camera import Camera
-from .entity import Player
-from .level import Level
+from ..level import Camera, Player, Level
 
 
-class SingleLevelScene(Scene):
-    """Le niveau en solo."""
+class LevelScene(Scene):
+    """La classe dont toutes les autres scènes de niveau doivent dériver."""
 
-    def __init__(self) -> None:
-        """Constructeur."""
+    def __init__(self, players: set[Player], main_player: Player) -> None:
+        """
+        Constructeur.
+        :param players: Tous les joueurs.
+        :param main_player: Le joueur qu'il faut suivre. (Doit faire partie de
+            players)
+        """
         super().__init__()
 
         map_path = os.path.join(os.path.dirname(__file__),
             "..", "..", "..", "maps", "sample.png")
-        self.player = Player()
+        self.main_player = main_player
 
-        self.level: Level = Level(set([self.player]), map_path)
+        self.level: Level = Level(players, map_path)
         
         self.camera: Camera = Camera()
         self.camera.position = self.level.level_map.spawn_point.copy
     
-    def fixed_update(self) -> None:
-        if self.level.winner is None:
+    def fixed_update(self, should_update_level=True) -> None:
+        if self.level.winner is None and should_update_level:
             self.level.fixed_update()
         
         self.camera.position = self.camera.position.lerp(
-            self.player.position + CAMERA_OFFSET,
+            self.main_player.position + CAMERA_OFFSET,
             Time.fixed_delta_time * 4
         )
 
@@ -43,14 +47,6 @@ class SingleLevelScene(Scene):
             self.level.level_map.top_left.y + HEIGHT_IN_BLOCKS/2 - 0.5),
             self.level.level_map.bottom_right.y - HEIGHT_IN_BLOCKS/2 - 0.5
         )
-    
-    def update(self) -> None:
-        inputs = Player.Inputs()
-        inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
-        inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
-        inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
-
-        self.player.update(inputs)
     
     def render(self) -> None:
         self.camera.begin_render()
