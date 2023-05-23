@@ -50,7 +50,8 @@ class LevelScene(Scene):
                             Vec2(150, 50), Fit.NONE,
                             "Reprendre", pr.Color(0, 0, 0, 255), 20,
                             background_color=pr.Color(200, 100, 200, 255),
-                            border_color=pr.Color(255, 100, 255, 255), border_width=3,
+                            border_color=pr.Color(255, 100, 255, 255),
+                            border_width=3,
                             command=self.close_pause_menu
                         ),
                         TextButton(
@@ -58,7 +59,8 @@ class LevelScene(Scene):
                             Vec2(150, 50), Fit.NONE,
                             "Quitter", pr.Color(0, 0, 0, 255), 20,
                             background_color=pr.Color(200, 100, 200, 255),
-                            border_color=pr.Color(255, 100, 255, 255), border_width=3,
+                            border_color=pr.Color(255, 100, 255, 255),
+                            border_width=3,
                             command=lambda:
                                 Scene.switch_scene(SceneId.MAIN_MENU)
                         )
