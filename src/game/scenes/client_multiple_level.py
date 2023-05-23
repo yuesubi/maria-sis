@@ -38,6 +38,8 @@ class ClientMultipleLevelScene(LevelScene):
         return super().fixed_update(should_update_level=False)
 
     def update(self) -> None:
+        super().update()
+
         inputs = Player.Inputs()
         inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
         inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)

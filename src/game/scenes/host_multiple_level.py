@@ -45,6 +45,8 @@ class HostMultipleLevelScene(LevelScene):
         self.socket.setblocking(False)
     
     def update(self) -> None:
+        super().update()
+
         inputs = Player.Inputs()
         inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
         inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
