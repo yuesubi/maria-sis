@@ -1,4 +1,3 @@
-import os
 import pyray as pr
 
 from ...constants import *
@@ -18,6 +17,9 @@ class SingleLevelScene(LevelScene):
 
     def update(self) -> None:
         super().update()
+
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
+            self.open_pause_menu()
 
         inputs = Player.Inputs()
         inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)

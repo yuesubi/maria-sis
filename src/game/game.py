@@ -33,6 +33,7 @@ class Game:
             "Maria Sis"
         )
         pr.set_trace_log_level(pr.TraceLogLevel.LOG_ERROR)
+        pr.set_exit_key(pr.KeyboardKey.KEY_BACKSPACE)
     
         Scene.set_create_scene_callback(
             cast(CreateSceneCallBack, self.create_scene)

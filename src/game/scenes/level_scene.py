@@ -35,16 +35,18 @@ class LevelScene(Scene):
             children=[
                 Frame(
                     Vec2(0, 0), Anchor.C,
-                    Vec2(200, 200), Fit.NONE,
+                    Vec2(240, 240), Fit.NONE,
+                    background_color=pr.Color(200, 100, 200, 255),
+                    border_color=pr.Color(255, 100, 255, 255), border_width=3,
                     children=[
                         Text(
-                            Vec2(0, -100), Anchor.C,
-                            "Menu de pause",
+                            Vec2(0, -60), Anchor.C,
+                            "Menu de Pause",
                             pr.Color(0, 0, 0, 255),
-                            font_size=40
+                            font_size=26
                         ),
                         TextButton(
-                            Vec2(0, -25), Anchor.C,
+                            Vec2(0, 0), Anchor.C,
                             Vec2(150, 50), Fit.NONE,
                             "Reprendre", pr.Color(0, 0, 0, 255), 20,
                             background_color=pr.Color(200, 100, 200, 255),
@@ -52,7 +54,7 @@ class LevelScene(Scene):
                             command=self.close_pause_menu
                         ),
                         TextButton(
-                            Vec2(0, 40), Anchor.C,
+                            Vec2(0, 60), Anchor.C,
                             Vec2(150, 50), Fit.NONE,
                             "Quitter", pr.Color(0, 0, 0, 255), 20,
                             background_color=pr.Color(200, 100, 200, 255),
@@ -67,9 +69,6 @@ class LevelScene(Scene):
     
     def update(self) -> None:
         self._pause_menu.update()
-
-        if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
-            self.open_pause_menu()
     
     def fixed_update(self, should_update_level=True) -> None:
         if self.level.winner is None and should_update_level and \
@@ -104,7 +103,7 @@ class LevelScene(Scene):
         self.camera.end_render()
 
         if self._is_pause_menu_open:
-            self.main_frame.size.xy = pr.get_screen_width(), pr.get_screen_height()
+            self._pause_menu.size.xy = pr.get_screen_width(), pr.get_screen_height()
             self._pause_menu.render()
     
     def open_pause_menu(self) -> None:
