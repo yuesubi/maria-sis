@@ -44,11 +44,22 @@ class HostMultipleLevelScene(LevelScene):
         self.socket.bind((SELF_IP, GAME_SERVER_PORT))
         self.socket.setblocking(False)
     
+    def fixed_update(self) -> None:
+        if not self.is_pause_menu_open:
+            self.level.fixed_update()
+        super().fixed_update()
+
     def update(self) -> None:
+        super().update()
+
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
+            self.is_pause_menu_open = not self.is_pause_menu_open
+
         inputs = Player.Inputs()
-        inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
-        inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
-        inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
+        if not self.is_pause_menu_open:
+            inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
+            inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
+            inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
         self.inputs[self.own_id] = inputs
         
         all_received = False

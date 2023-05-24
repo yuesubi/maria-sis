@@ -1,10 +1,10 @@
-import abc
 import os
 import pyray as pr
 
 from ...constants import *
-from ..managers import Time, Scene
+from ..managers import Time, Scene, SceneId
 from ..level import Camera, Player, Level
+from .widgets import *
 
 
 class LevelScene(Scene):
@@ -28,12 +28,51 @@ class LevelScene(Scene):
         self.camera: Camera = Camera()
         self.camera.position = self.level.level_map.spawn_point.copy
 
-        self.pause_menu: int = 0
+        self.is_pause_menu_open: bool = False
+        self._pause_menu: Frame = Frame(
+            Vec2(0, 0), Anchor.NW,
+            Vec2.null, Fit.NONE,
+            children=[
+                Frame(
+                    Vec2(0, 0), Anchor.C,
+                    Vec2(240, 240), Fit.NONE,
+                    background_color=pr.Color(200, 100, 200, 255),
+                    border_color=pr.Color(255, 100, 255, 255), border_width=3,
+                    children=[
+                        Text(
+                            Vec2(0, -60), Anchor.C,
+                            "Menu de Pause",
+                            pr.Color(0, 0, 0, 255),
+                            font_size=26
+                        ),
+                        TextButton(
+                            Vec2(0, 0), Anchor.C,
+                            Vec2(150, 50), Fit.NONE,
+                            "Reprendre", pr.Color(0, 0, 0, 255), 20,
+                            background_color=pr.Color(200, 100, 200, 255),
+                            border_color=pr.Color(255, 100, 255, 255),
+                            border_width=3,
+                            command=self._resume_button_cmd
+                        ),
+                        TextButton(
+                            Vec2(0, 60), Anchor.C,
+                            Vec2(150, 50), Fit.NONE,
+                            "Quitter", pr.Color(0, 0, 0, 255), 20,
+                            background_color=pr.Color(200, 100, 200, 255),
+                            border_color=pr.Color(255, 100, 255, 255),
+                            border_width=3,
+                            command=lambda:
+                                Scene.switch_scene(SceneId.MAIN_MENU)
+                        )
+                    ]
+                )
+            ]
+        )
     
-    def fixed_update(self, should_update_level=True) -> None:
-        if self.level.winner is None and should_update_level:
-            self.level.fixed_update()
-        
+    def update(self) -> None:
+        self._pause_menu.update()
+    
+    def fixed_update(self) -> None:
         self.camera.position = self.camera.position.lerp(
             self.main_player.position + CAMERA_OFFSET,
             Time.fixed_delta_time * 4
@@ -60,3 +99,11 @@ class LevelScene(Scene):
             entity.draw(self.camera)
             
         self.camera.end_render()
+
+        if self.is_pause_menu_open:
+            self._pause_menu.size.xy = pr.get_screen_width(), pr.get_screen_height()
+            self._pause_menu.render()
+    
+    def _resume_button_cmd(self) -> None:
+        """Ouvrir le menu de pause."""
+        self.is_pause_menu_open = False

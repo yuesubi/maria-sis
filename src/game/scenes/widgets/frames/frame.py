@@ -84,9 +84,11 @@ class Frame(Widget):
 
         # Dessiner le fond du cadre
         if self.background_color is not None:
-            pr.draw_rectangle(
-                global_pos.x, global_pos.y,
-                self.size.x, self.size.y,
+            pr.draw_rectangle_rec(
+                pr.Rectangle(
+                    global_pos.x, global_pos.y,
+                    self.size.x, self.size.y
+                ),
                 self.background_color
             )
         
@@ -97,7 +99,7 @@ class Frame(Widget):
                     global_pos.x, global_pos.y,
                     self.size.x, self.size.y
                 ),
-                self.border_width,
+                int(self.border_width),
                 self.border_color
             )
 
