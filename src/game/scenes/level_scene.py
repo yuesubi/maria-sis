@@ -28,7 +28,7 @@ class LevelScene(Scene):
         self.camera: Camera = Camera()
         self.camera.position = self.level.level_map.spawn_point.copy
 
-        self._is_pause_menu_open: bool = False
+        self.is_pause_menu_open: bool = False
         self._pause_menu: Frame = Frame(
             Vec2(0, 0), Anchor.NW,
             Vec2.null, Fit.NONE,
@@ -52,7 +52,7 @@ class LevelScene(Scene):
                             background_color=pr.Color(200, 100, 200, 255),
                             border_color=pr.Color(255, 100, 255, 255),
                             border_width=3,
-                            command=self.close_pause_menu
+                            command=self._resume_button_cmd
                         ),
                         TextButton(
                             Vec2(0, 60), Anchor.C,
@@ -73,8 +73,7 @@ class LevelScene(Scene):
         self._pause_menu.update()
     
     def fixed_update(self, should_update_level=True) -> None:
-        if self.level.winner is None and should_update_level and \
-                not self._is_pause_menu_open:
+        if self.level.winner is None and should_update_level:
             self.level.fixed_update()
         
         self.camera.position = self.camera.position.lerp(
@@ -104,14 +103,10 @@ class LevelScene(Scene):
             
         self.camera.end_render()
 
-        if self._is_pause_menu_open:
+        if self.is_pause_menu_open:
             self._pause_menu.size.xy = pr.get_screen_width(), pr.get_screen_height()
             self._pause_menu.render()
     
-    def open_pause_menu(self) -> None:
+    def _resume_button_cmd(self) -> None:
         """Ouvrir le menu de pause."""
-        self._is_pause_menu_open = True
-    
-    def close_pause_menu(self) -> None:
-        """Fermer le menu de pause."""
-        self._is_pause_menu_open = False
+        self.is_pause_menu_open = False

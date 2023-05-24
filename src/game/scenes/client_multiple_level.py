@@ -40,10 +40,15 @@ class ClientMultipleLevelScene(LevelScene):
     def update(self) -> None:
         super().update()
 
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
+            self.is_pause_menu_open = not self.is_pause_menu_open
+
         inputs = Player.Inputs()
-        inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
-        inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
-        inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
+
+        if not self.is_pause_menu_open:
+            inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
+            inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
+            inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
 
         msg = ('1' if inputs.pressing_left else '0') + \
             ('1' if inputs.pressing_right else '0') + \

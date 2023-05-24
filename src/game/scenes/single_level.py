@@ -19,10 +19,14 @@ class SingleLevelScene(LevelScene):
         super().update()
 
         if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
-            self.open_pause_menu()
+            self.is_pause_menu_open = not self.is_pause_menu_open
 
         inputs = Player.Inputs()
         inputs.pressing_left = pr.is_key_down(pr.KeyboardKey.KEY_LEFT)
         inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
         inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
         self.main_player.update(inputs)
+    
+    def fixed_update(self) -> None:
+        if not self.is_pause_menu_open:
+            super().fixed_update()
