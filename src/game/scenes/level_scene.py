@@ -72,10 +72,7 @@ class LevelScene(Scene):
     def update(self) -> None:
         self._pause_menu.update()
     
-    def fixed_update(self, should_update_level=True) -> None:
-        if self.level.winner is None and should_update_level:
-            self.level.fixed_update()
-        
+    def fixed_update(self) -> None:
         self.camera.position = self.camera.position.lerp(
             self.main_player.position + CAMERA_OFFSET,
             Time.fixed_delta_time * 4

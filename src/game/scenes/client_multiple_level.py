@@ -35,7 +35,7 @@ class ClientMultipleLevelScene(LevelScene):
         self.socket.setblocking(False)
     
     def fixed_update(self) -> None:
-        return super().fixed_update(should_update_level=False)
+        super().fixed_update()
 
     def update(self) -> None:
         super().update()

@@ -44,6 +44,11 @@ class HostMultipleLevelScene(LevelScene):
         self.socket.bind((SELF_IP, GAME_SERVER_PORT))
         self.socket.setblocking(False)
     
+    def fixed_update(self) -> None:
+        if not self.is_pause_menu_open:
+            self.level.fixed_update()
+        super().fixed_update()
+
     def update(self) -> None:
         super().update()
 

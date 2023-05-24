@@ -15,6 +15,11 @@ class SingleLevelScene(LevelScene):
             main_player=player
         )
 
+    def fixed_update(self) -> None:
+        if not self.is_pause_menu_open:
+            self.level.fixed_update()
+        super().fixed_update()
+    
     def update(self) -> None:
         super().update()
 
@@ -26,7 +31,3 @@ class SingleLevelScene(LevelScene):
         inputs.pressing_right = pr.is_key_down(pr.KeyboardKey.KEY_RIGHT)
         inputs.pressing_jump = pr.is_key_down(pr.KeyboardKey.KEY_SPACE)
         self.main_player.update(inputs)
-    
-    def fixed_update(self) -> None:
-        if not self.is_pause_menu_open:
-            super().fixed_update()
